@@ -1,0 +1,71 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    {
+      "soha": "https://soha.ai/vocab/v1",
+      "saref": "https://saref.etsi.org/core/"
+    }
+  ],
+  "@type": "tm:ThingModel",
+  "title": "High-Speed Drive Module",
+  "description": "Open-loop high-speed continuous drive motor. Duty-cycle speed control with electronic braking. Suitable for wheeled platforms and mobile chassis.",
+  "soha:moduleType": "actuator",
+
+  "soha:physics": {
+    "joint": {
+      "type": "continuous",
+      "axis": [0, 0, 1]
+    },
+    "actuator": {
+      "type": "velocity"
+    }
+  },
+
+  "properties": {
+    "status": {
+      "type": "object",
+      "readOnly": true,
+      "observable": true,
+      "properties": {
+        "duty_cycle":  { "type": "number",  "unit": "percent",  "description": "Current duty cycle. 0 = stopped" },
+        "error":       { "type": "integer",                     "description": "Error code. 0 = normal" },
+        "ready":       { "type": "boolean",                     "description": "Module initialized and ready" }
+      },
+      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+    }
+  },
+
+  "actions": {
+    "setSpeed": {
+      "title": "Set motor speed",
+      "description": "Open-loop duty cycle. Positive=forward, negative=reverse, 0=active brake. Non-blocking.",
+      "safe": false,
+      "idempotent": false,
+      "input": {
+        "type": "object",
+        "properties": {
+          "speed": { "type": "number", "unit": "percent", "minimum": -1.0, "maximum": 1.0, "description": "Duty cycle. 0=brake." }
+        },
+        "required": ["speed"]
+      },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/setSpeed", "op": ["invokeaction"] }]
+    },
+    "brake": {
+      "title": "Active brake",
+      "description": "Electronic braking with anti-roll hold. Equivalent to setSpeed(0).",
+      "safe": true,
+      "idempotent": true,
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/brake", "op": ["invokeaction"] }]
+    },
+    "emergencyStop": {
+      "title": "Emergency stop",
+      "description": "Immediate hard stop. No deceleration. Use brake() for controlled stops.",
+      "safe": true,
+      "idempotent": true,
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
+    }
+  }
+}

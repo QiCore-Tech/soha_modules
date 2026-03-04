@@ -1,0 +1,64 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    {
+      "soha": "https://soha.ai/vocab/v1",
+      "saref": "https://saref.etsi.org/core/"
+    }
+  ],
+  "@type": "tm:ThingModel",
+  "title": "{{MODULE_TITLE}}",
+  "description": "{{MODULE_DESCRIPTION}}",
+  "soha:moduleType": "{{actuator|peripheral}}",
+
+  "soha:physics": {
+    "joint": {
+      "type": "{{revolute|continuous|fixed}}",
+      "axis": [0, 0, 1],
+      "limits": {
+        "lower": -166.0,
+        "upper": 166.0,
+        "maxVelocity": 2.175,
+        "maxEffort": 87
+      }
+    },
+    "actuator": {
+      "type": "{{position|velocity}}",
+      "kp": 1000,
+      "kv": 20
+    }
+  },
+
+  "properties": {
+    "status": {
+      "type": "object",
+      "readOnly": true,
+      "observable": true,
+      "properties": {
+        "error": { "type": "integer", "description": "Error code. 0 = normal" },
+        "ready": { "type": "boolean", "description": "Module initialized and ready for commands" }
+      },
+      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+    }
+  },
+
+  "actions": {
+    "{{actionName}}": {
+      "title": "{{Action Title}}",
+      "description": "{{Action description}}",
+      "safe": false,
+      "idempotent": false,
+      "input": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "output": {
+        "type": "object",
+        "properties": { "success": { "type": "boolean" } },
+        "required": ["success"]
+      },
+      "forms": [{ "href": "/actions/{{actionName}}", "op": ["invokeaction"] }]
+    }
+  }
+}

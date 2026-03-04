@@ -1,0 +1,36 @@
+# {{MODULE_TITLE}}
+
+> 编号: {{MODULE_NUMBER}} | moduleType: {{MODULE_TYPE}} | 全能口: {{PORT_COUNT}}x
+
+## 概述
+
+**{{MODULE_TITLE}}** — {{MODULE_DESCRIPTION_CN}}
+
+## 关键特性
+
+- {{FEATURE_1}}
+- {{FEATURE_2}}
+- {{FEATURE_3}}
+
+## 接口概览
+
+### Actions
+
+| Action | safe | idempotent | 说明 |
+|--------|:----:|:----------:|------|
+| {{ACTION_NAME}} | {{SAFE}} | {{IDEMPOTENT}} | {{ACTION_DESC}} |
+
+### Properties (status)
+
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `error` | integer | 错误码，0 = 正常 |
+| `ready` | boolean | 模组已初始化 |
+
+### Events
+
+{{EVENTS_TABLE_OR_NONE}}
+
+## 待确认
+
+- [ ] {{OPEN_QUESTION_1}}

@@ -1,0 +1,70 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
+  ],
+  "@type": "tm:ThingModel",
+  "title": "Developer Bridge Module",
+  "description": "Universal I/O bridge with 2x Qwiic/I2C ports and GPIO header (GVS). Provides raw I2C, GPIO access for third-party device integration. AI generates driver code from user-uploaded datasheets.",
+  "soha:moduleType": "peripheral",
+
+  "soha:physics": { "joint": { "type": "fixed" } },
+
+  "properties": {
+    "status": {
+      "type": "object", "readOnly": true, "observable": true,
+      "properties": {
+        "gpio_count": { "type": "integer",  "description": "Available GPIO pins" },
+        "i2c_count":  { "type": "integer",  "description": "Available I2C/Qwiic ports" },
+        "error":      { "type": "integer",  "description": "Error code. 0 = normal" },
+        "ready":      { "type": "boolean",  "description": "Module initialized and ready" }
+      },
+      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+    }
+  },
+
+  "actions": {
+    "i2cScan": {
+      "title": "Scan I2C bus", "description": "Scan for connected I2C devices.",
+      "safe": true, "idempotent": true,
+      "input": { "type": "object", "properties": { "bus": { "type": "integer", "minimum": 0, "maximum": 1, "default": 0 } } },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" }, "devices": { "type": "array", "items": { "type": "integer" } } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/i2cScan", "op": ["invokeaction"] }]
+    },
+    "i2cWrite": {
+      "title": "Write to I2C device", "description": "Write bytes to I2C address:register.",
+      "safe": false, "idempotent": false,
+      "input": { "type": "object", "properties": { "bus": { "type": "integer", "default": 0 }, "address": { "type": "integer" }, "register": { "type": "integer" }, "data": { "type": "array", "items": { "type": "integer" } } }, "required": ["address", "register", "data"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/i2cWrite", "op": ["invokeaction"] }]
+    },
+    "i2cRead": {
+      "title": "Read from I2C device", "description": "Read bytes from I2C address:register.",
+      "safe": true, "idempotent": true,
+      "input": { "type": "object", "properties": { "bus": { "type": "integer", "default": 0 }, "address": { "type": "integer" }, "register": { "type": "integer" }, "length": { "type": "integer", "minimum": 1, "maximum": 32 } }, "required": ["address", "register", "length"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" }, "data": { "type": "array", "items": { "type": "integer" } } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/i2cRead", "op": ["invokeaction"] }]
+    },
+    "gpioSetMode": {
+      "title": "Configure GPIO pin", "description": "Set pin direction.",
+      "safe": false, "idempotent": true,
+      "input": { "type": "object", "properties": { "pin": { "type": "integer", "minimum": 0, "maximum": 7 }, "mode": { "type": "string", "enum": ["input", "output", "input_pullup"] } }, "required": ["pin", "mode"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/gpioSetMode", "op": ["invokeaction"] }]
+    },
+    "gpioWrite": {
+      "title": "Write GPIO pin", "description": "Set output pin HIGH/LOW.",
+      "safe": false, "idempotent": false,
+      "input": { "type": "object", "properties": { "pin": { "type": "integer", "minimum": 0, "maximum": 7 }, "value": { "type": "boolean" } }, "required": ["pin", "value"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/gpioWrite", "op": ["invokeaction"] }]
+    },
+    "gpioRead": {
+      "title": "Read GPIO pin", "description": "Read input pin state.",
+      "safe": true, "idempotent": true,
+      "input": { "type": "object", "properties": { "pin": { "type": "integer", "minimum": 0, "maximum": 7 } }, "required": ["pin"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" }, "value": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/gpioRead", "op": ["invokeaction"] }]
+    }
+  }
+}

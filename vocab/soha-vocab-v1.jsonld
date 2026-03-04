@@ -1,0 +1,40 @@
+{
+  "@context": {
+    "soha": "https://soha.ai/vocab/v1#",
+    "td": "https://www.w3.org/2019/wot/td#",
+    "jsonschema": "https://www.w3.org/2019/wot/json-schema#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#"
+  },
+  "@graph": [
+    {
+      "@id": "soha:moduleType",
+      "@type": "rdf:Property",
+      "rdfs:label": "Module Type",
+      "rdfs:comment": "Classification of the SOHA module: actuator (motion-producing), peripheral (sensing/output/infrastructure), or kit (composite device with multiple sub-modules)",
+      "rdfs:range": {
+        "@type": "rdfs:Datatype",
+        "owl:oneOf": ["actuator", "peripheral", "kit"]
+      }
+    },
+    {
+      "@id": "soha:physics",
+      "@type": "rdf:Property",
+      "rdfs:label": "Physics Description",
+      "rdfs:comment": "Physical model of the module for simulation and binding. Contains joint definition (type, axis, limits) and actuator control mode (position, velocity). Non-actuator modules use joint.type='fixed'."
+    },
+    {
+      "@id": "soha:interfaceType",
+      "@type": "rdf:Property",
+      "rdfs:label": "Interface Type",
+      "rdfs:comment": "Kit-only field. Classifies each action as 'skill' (composite operation spanning multiple sub-modules) or 'action' (pass-through to a single sub-module)."
+    },
+    {
+      "@id": "soha:type",
+      "@type": "rdf:Property",
+      "rdfs:label": "Embedded Data Type Hint",
+      "rdfs:comment": "Low-level type hint for driver code generation. Maps to MicroPython/C types: f32 (float), u8 (unsigned byte), u32 (unsigned 32-bit), bool (boolean). Used by the SURD compiler to generate type-safe transport code."
+    }
+  ]
+}

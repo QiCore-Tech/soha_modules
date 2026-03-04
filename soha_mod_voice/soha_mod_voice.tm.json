@@ -1,0 +1,70 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
+  ],
+  "@type": "tm:ThingModel",
+  "title": "Voice Interaction Module",
+  "description": "Bidirectional audio module with microphone array and speaker. Supports local keyword recognition with configurable vocabulary.",
+  "soha:moduleType": "peripheral",
+
+  "soha:physics": { "joint": { "type": "fixed" } },
+
+  "properties": {
+    "status": {
+      "type": "object", "readOnly": true, "observable": true,
+      "properties": {
+        "is_listening":  { "type": "boolean",                    "description": "Keyword detection active" },
+        "volume":        { "type": "number", "unit": "percent",  "description": "Current volume" },
+        "keyword_count": { "type": "integer",                    "description": "Configured keywords count" },
+        "error":         { "type": "integer",                    "description": "Error code. 0 = normal" },
+        "ready":         { "type": "boolean",                    "description": "Module initialized and ready" }
+      },
+      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+    }
+  },
+
+  "actions": {
+    "playTone": {
+      "title": "Play tone", "description": "Play single-frequency tone.",
+      "safe": false, "idempotent": false,
+      "input": { "type": "object", "properties": { "frequency": { "type": "integer", "unit": "Hz", "minimum": 100, "maximum": 8000 }, "duration_ms": { "type": "integer", "unit": "ms", "minimum": 50, "maximum": 5000 } }, "required": ["frequency", "duration_ms"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/playTone", "op": ["invokeaction"] }]
+    },
+    "setVolume": {
+      "title": "Set volume", "description": "Set speaker volume. 0=mute, 1.0=max.",
+      "safe": true, "idempotent": true,
+      "input": { "type": "object", "properties": { "level": { "type": "number", "unit": "percent", "minimum": 0.0, "maximum": 1.0 } }, "required": ["level"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/setVolume", "op": ["invokeaction"] }]
+    },
+    "startListening": {
+      "title": "Start keyword listening", "description": "Begin local keyword detection. Fires keywordDetected events.",
+      "safe": true, "idempotent": true,
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/startListening", "op": ["invokeaction"] }]
+    },
+    "stopListening": {
+      "title": "Stop listening", "description": "Stop keyword detection.",
+      "safe": true, "idempotent": true,
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/stopListening", "op": ["invokeaction"] }]
+    },
+    "setKeywords": {
+      "title": "Configure keywords", "description": "Set keyword list for local recognition. Max 10 words.",
+      "safe": false, "idempotent": true,
+      "input": { "type": "object", "properties": { "keywords": { "type": "array", "items": { "type": "string" }, "maxItems": 10 } }, "required": ["keywords"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/setKeywords", "op": ["invokeaction"] }]
+    }
+  },
+
+  "events": {
+    "keywordDetected": {
+      "title": "Keyword detected", "description": "Local keyword recognized.",
+      "data": { "type": "object", "properties": { "keyword": { "type": "string" }, "confidence": { "type": "number" }, "timestamp": { "type": "integer", "unit": "ms" } } },
+      "forms": [{ "href": "/events/keywordDetected", "op": ["subscribeevent"] }]
+    }
+  }
+}

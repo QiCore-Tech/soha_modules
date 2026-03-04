@@ -1,0 +1,95 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    {
+      "soha": "https://soha.ai/vocab/v1",
+      "saref": "https://saref.etsi.org/core/"
+    }
+  ],
+  "@type": "tm:ThingModel",
+  "title": "Smart Joint Module",
+  "description": "High-precision revolute joint with FOC control. Integrated brushless motor, reducer, encoder and driver. Position-controlled, reports angle/velocity/torque.",
+  "soha:moduleType": "actuator",
+
+  "soha:physics": {
+    "joint": {
+      "type": "revolute",
+      "axis": [0, 0, 1],
+      "limits": {
+        "lower": -166.0,
+        "upper": 166.0,
+        "maxVelocity": 2.175,
+        "maxEffort": 87
+      }
+    },
+    "actuator": {
+      "type": "position",
+      "kp": 1000,
+      "kv": 20
+    }
+  },
+
+  "properties": {
+    "status": {
+      "type": "object",
+      "readOnly": true,
+      "observable": true,
+      "properties": {
+        "angle":    { "type": "number", "unit": "degree", "description": "Current joint angle. 0° is power-on default" },
+        "velocity": { "type": "number", "unit": "deg/s",  "description": "Current angular velocity" },
+        "torque":   { "type": "number", "unit": "Nm",     "description": "Current torque load on joint" },
+        "error":    { "type": "integer",                   "description": "Error code. 0 = normal" },
+        "ready":    { "type": "boolean",                   "description": "Module initialized and ready for commands" }
+      },
+      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+    }
+  },
+
+  "actions": {
+    "setTarget": {
+      "title": "Set joint target angle",
+      "description": "Move joint to target angle at specified speed. Non-blocking: returns immediately, motor begins moving. Use getStatus() to poll position.",
+      "safe": false,
+      "idempotent": false,
+      "input": {
+        "type": "object",
+        "properties": {
+          "angle": {
+            "type": "number",
+            "unit": "degree",
+            "minimum": -166.0,
+            "maximum": 166.0,
+            "description": "Target angle. 0° is power-on default position. Absolute, not relative."
+          },
+          "speed": {
+            "type": "number",
+            "unit": "percent",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.5,
+            "description": "Fraction of maxVelocity. 1.0 = full speed."
+          }
+        },
+        "required": ["angle"]
+      },
+      "output": {
+        "type": "object",
+        "properties": { "success": { "type": "boolean" } },
+        "required": ["success"]
+      },
+      "forms": [{ "href": "/actions/setTarget", "op": ["invokeaction"] }]
+    },
+    "emergencyStop": {
+      "title": "Emergency stop",
+      "description": "Immediately stop all movement. Non-latch: module returns to ready state after stopping.",
+      "safe": true,
+      "idempotent": true,
+      "output": {
+        "type": "object",
+        "properties": { "success": { "type": "boolean" } },
+        "required": ["success"]
+      },
+      "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
+    }
+  }
+}

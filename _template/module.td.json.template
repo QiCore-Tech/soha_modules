@@ -1,0 +1,42 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    {
+      "soha": "https://soha.ai/vocab/v1",
+      "saref": "https://saref.etsi.org/core/"
+    }
+  ],
+  "id": "urn:dev:sn:SOHA-XXX-001",
+  "title": "{{MODULE_TITLE}}",
+  "@type": ["{{saref:Type}}", "{{soha:Type}}"],
+  "soha:moduleType": "{{actuator|peripheral}}",
+  "description": "{{MODULE_DESCRIPTION}}",
+
+  "soha:physics": {
+    "joint": {
+      "type": "{{revolute|continuous|fixed}}"
+    }
+  },
+
+  "base": "coap://192.168.1.XX:5683",
+
+  "securityDefinitions": {
+    "nosec_sc": { "scheme": "nosec" }
+  },
+  "security": "nosec_sc",
+
+  "properties": {
+    "status": {
+      "type": "object",
+      "readOnly": true,
+      "observable": true,
+      "properties": {
+        "error": { "type": "integer", "description": "Error code. 0 = normal" },
+        "ready": { "type": "boolean", "description": "Module initialized and ready for commands" }
+      },
+      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+    }
+  },
+
+  "actions": {}
+}

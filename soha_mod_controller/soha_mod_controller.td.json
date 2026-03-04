@@ -1,0 +1,73 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
+  ],
+  "@type": ["saref:Sensor", "soha:ControllerModule"],
+  "id": "urn:dev:sn:SOHA-CTL-001",
+  "title": "Controller Module",
+  "description": "Modular input controller with magnetic accessory system. Supports interchangeable button, joystick, and knob caps with automatic detection.",
+  "base": "coap://192.168.1.81:5683",
+  "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
+  "security": "nosec_sc",
+  "soha:moduleType": "peripheral",
+
+  "soha:physics": { "joint": { "type": "fixed" } },
+
+  "properties": {
+    "status": {
+      "type": "object", "readOnly": true, "observable": true,
+      "properties": {
+        "accessory_type":  { "type": "string", "enum": ["none", "button", "joystick", "knob"], "description": "Attached accessory" },
+        "button_pressed":  { "type": "boolean",                    "description": "[button] Held down" },
+        "button_count":    { "type": "integer",                    "description": "[button] Cumulative press count" },
+        "joystick_x":      { "type": "number", "minimum": -1.0, "maximum": 1.0, "description": "[joystick] X-axis" },
+        "joystick_y":      { "type": "number", "minimum": -1.0, "maximum": 1.0, "description": "[joystick] Y-axis" },
+        "joystick_button": { "type": "boolean",                    "description": "[joystick] Stick press" },
+        "knob_angle":      { "type": "number", "unit": "degree",  "description": "[knob] Cumulative angle" },
+        "knob_pressed":    { "type": "boolean",                    "description": "[knob] Knob press" },
+        "error":           { "type": "integer",                    "description": "Error code. 0 = normal" },
+        "ready":           { "type": "boolean",                    "description": "Module initialized and ready" }
+      },
+      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+    }
+  },
+
+  "actions": {
+    "setLongPressThreshold": {
+      "title": "Configure long press", "description": "Set hold duration for longPress event.",
+      "safe": true, "idempotent": true,
+      "input": { "type": "object", "properties": { "duration_ms": { "type": "integer", "minimum": 200, "maximum": 5000, "default": 1000 } }, "required": ["duration_ms"] },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
+      "forms": [{ "href": "/actions/setLongPressThreshold", "op": ["invokeaction"] }]
+    }
+  },
+
+  "events": {
+    "accessoryChanged": {
+      "title": "Accessory changed",
+      "data": { "type": "object", "properties": { "new_type": { "type": "string" }, "old_type": { "type": "string" }, "timestamp": { "type": "integer", "unit": "ms" } } },
+      "forms": [{ "href": "/events/accessoryChanged", "op": ["subscribeevent"] }]
+    },
+    "buttonPressed": {
+      "title": "Button pressed", "description": "[button]",
+      "data": { "type": "object", "properties": { "timestamp": { "type": "integer", "unit": "ms" } } },
+      "forms": [{ "href": "/events/buttonPressed", "op": ["subscribeevent"] }]
+    },
+    "buttonReleased": {
+      "title": "Button released", "description": "[button]",
+      "data": { "type": "object", "properties": { "duration_ms": { "type": "integer" }, "timestamp": { "type": "integer", "unit": "ms" } } },
+      "forms": [{ "href": "/events/buttonReleased", "op": ["subscribeevent"] }]
+    },
+    "longPress": {
+      "title": "Long press", "description": "[button]",
+      "data": { "type": "object", "properties": { "duration_ms": { "type": "integer" }, "timestamp": { "type": "integer", "unit": "ms" } } },
+      "forms": [{ "href": "/events/longPress", "op": ["subscribeevent"] }]
+    },
+    "knobTurned": {
+      "title": "Knob rotation", "description": "[knob]",
+      "data": { "type": "object", "properties": { "delta": { "type": "integer" }, "timestamp": { "type": "integer", "unit": "ms" } } },
+      "forms": [{ "href": "/events/knobTurned", "op": ["subscribeevent"] }]
+    }
+  }
+}
