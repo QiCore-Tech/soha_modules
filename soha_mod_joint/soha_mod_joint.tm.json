@@ -8,7 +8,7 @@
   ],
   "@type": "tm:ThingModel",
   "title": "Smart Joint Module",
-  "description": "High-precision continuous joint with FOC control. Integrated brushless motor, reducer, encoder and driver. Unlimited rotation with position control, reports angle/velocity/torque.",
+  "description": "High-precision continuous joint with FOC control. Integrated brushless motor, encoder and driver. Unlimited rotation with position control, reports angle/velocity/torque.",
   "soha:moduleType": "actuator",
 
   "soha:physics": {
