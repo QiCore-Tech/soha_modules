@@ -8,16 +8,14 @@
   ],
   "@type": "tm:ThingModel",
   "title": "Smart Micro Servo",
-  "description": "Dual-mode micro servo with angle feedback. Servo mode: position control ±180° with zero calibration. Wheel mode: 360° continuous rotation with speed control.",
+  "description": "Dual-mode micro servo with angle feedback and unlimited rotation. Servo mode: position control with zero calibration. Wheel mode: continuous rotation with speed control.",
   "soha:moduleType": "actuator",
 
   "soha:physics": {
     "joint": {
-      "type": "revolute",
+      "type": "continuous",
       "axis": [0, 0, 1],
       "limits": {
-        "lower": -180.0,
-        "upper": 180.0,
         "maxVelocity": 6.28,
         "maxEffort": 0.25
       }
@@ -52,7 +50,7 @@
       "input": {
         "type": "object",
         "properties": {
-          "angle": { "type": "number", "unit": "degree", "minimum": -180.0, "maximum": 180.0, "description": "Target angle. 0° is calibrated zero." },
+          "angle": { "type": "number", "unit": "degree", "description": "Target angle. 0° is calibrated zero. No limits — supports unlimited rotation." },
           "speed": { "type": "number", "unit": "percent", "minimum": 0.0, "maximum": 1.0, "default": 0.5, "description": "Fraction of max angular velocity." }
         },
         "required": ["angle"]
@@ -77,7 +75,7 @@
     },
     "setMode": {
       "title": "Switch operating mode",
-      "description": "Switch between servo (position, ±180°) and wheel (continuous, speed). Motor stops before switching.",
+      "description": "Switch between servo (position control, unlimited rotation) and wheel (continuous speed control). Motor stops before switching.",
       "safe": false,
       "idempotent": true,
       "input": {

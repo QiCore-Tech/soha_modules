@@ -8,16 +8,14 @@
   ],
   "@type": "tm:ThingModel",
   "title": "Smart Joint Module",
-  "description": "High-precision revolute joint with FOC control. Integrated brushless motor, reducer, encoder and driver. Position-controlled, reports angle/velocity/torque.",
+  "description": "High-precision continuous joint with FOC control. Integrated brushless motor, reducer, encoder and driver. Unlimited rotation with position control, reports angle/velocity/torque.",
   "soha:moduleType": "actuator",
 
   "soha:physics": {
     "joint": {
-      "type": "revolute",
+      "type": "continuous",
       "axis": [0, 0, 1],
       "limits": {
-        "lower": -166.0,
-        "upper": 166.0,
         "maxVelocity": 2.175,
         "maxEffort": 87
       }
@@ -57,9 +55,7 @@
           "angle": {
             "type": "number",
             "unit": "degree",
-            "minimum": -166.0,
-            "maximum": 166.0,
-            "description": "Target angle. 0° is power-on default position. Absolute, not relative."
+            "description": "Target angle. 0° is power-on default position. Absolute, not relative. No limits — supports unlimited rotation."
           },
           "speed": {
             "type": "number",
