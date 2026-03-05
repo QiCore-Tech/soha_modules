@@ -7,6 +7,7 @@
   "title": "Display Module",
   "description": "240x240 color display at 24fps+. Supports animated expressions, text rendering, and solid fills. Multiple displays can sync for distributed content.",
   "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_display_v1",
 
   "soha:physics": { "joint": { "type": "fixed" } },
 

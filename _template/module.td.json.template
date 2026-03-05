@@ -10,6 +10,7 @@
   "title": "{{MODULE_TITLE}}",
   "@type": ["{{saref:Type}}", "{{soha:Type}}"],
   "soha:moduleType": "{{actuator|peripheral}}",
+  "soha:moduleName": "soha_{{moduleName}}_v1",
   "description": "{{MODULE_DESCRIPTION}}",
 
   "soha:physics": {

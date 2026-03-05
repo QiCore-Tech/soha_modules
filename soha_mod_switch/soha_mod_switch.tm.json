@@ -7,6 +7,7 @@
   "title": "Switch Hub",
   "description": "4-port communication hub for star topology expansion. Provides signal conditioning for longer cable runs.",
   "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_switch_v1",
 
   "soha:physics": { "joint": { "type": "fixed" } },
 

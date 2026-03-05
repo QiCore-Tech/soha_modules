@@ -7,6 +7,7 @@
   "title": "Battery Module",
   "description": "Smart battery with 24V bus output, USB-C PD charging, and SOC reporting. System power center hosting ESP32 main controller.",
   "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_battery_v1",
 
   "soha:physics": { "joint": { "type": "fixed" } },
 

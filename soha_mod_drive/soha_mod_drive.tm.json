@@ -10,6 +10,7 @@
   "title": "High-Speed Drive Module",
   "description": "Open-loop high-speed continuous drive motor. Duty-cycle speed control with electronic braking. Suitable for wheeled platforms and mobile chassis.",
   "soha:moduleType": "actuator",
+  "soha:moduleName": "soha_drive_v1",
 
   "soha:physics": {
     "joint": {

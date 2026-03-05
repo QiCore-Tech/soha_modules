@@ -7,6 +7,7 @@
   "title": "Developer Bridge Module",
   "description": "Universal I/O bridge with 2x Qwiic/I2C ports and GPIO header (GVS). Provides raw I2C, GPIO access for third-party device integration. AI generates driver code from user-uploaded datasheets.",
   "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_developer_v1",
 
   "soha:physics": { "joint": { "type": "fixed" } },
 

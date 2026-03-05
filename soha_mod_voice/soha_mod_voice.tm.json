@@ -7,6 +7,7 @@
   "title": "Voice Interaction Module",
   "description": "Bidirectional audio module with microphone array and speaker. Supports local keyword recognition with configurable vocabulary.",
   "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_voice_v1",
 
   "soha:physics": { "joint": { "type": "fixed" } },
 

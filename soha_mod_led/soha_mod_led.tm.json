@@ -7,6 +7,7 @@
   "title": "LED Driver Module",
   "description": "WS2812/RGB LED strip driver. Controls 1-2 meter strips with per-pixel color, built-in effects, and brightness control.",
   "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_led_v1",
 
   "soha:physics": { "joint": { "type": "fixed" } },
 

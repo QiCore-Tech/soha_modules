@@ -10,6 +10,7 @@
   "title": "Smart Joint Module",
   "@type": ["saref:Actuator", "soha:ContinuousJoint"],
   "soha:moduleType": "actuator",
+  "soha:moduleName": "soha_joint_v1",
   "description": "High-precision continuous joint with FOC control. Integrated brushless motor, encoder and driver. Unlimited rotation with position control, reports angle/velocity/torque.",
 
   "soha:physics": {

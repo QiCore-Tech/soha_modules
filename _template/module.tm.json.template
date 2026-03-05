@@ -10,6 +10,7 @@
   "title": "{{MODULE_TITLE}}",
   "description": "{{MODULE_DESCRIPTION}}",
   "soha:moduleType": "{{actuator|peripheral}}",
+  "soha:moduleName": "soha_{{moduleName}}_v1",
 
   "soha:physics": {
     "joint": {

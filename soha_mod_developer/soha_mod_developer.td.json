@@ -11,6 +11,7 @@
   "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
   "security": "nosec_sc",
   "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_developer_v1",
 
   "soha:physics": { "joint": { "type": "fixed" } },
 

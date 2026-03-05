@@ -10,6 +10,7 @@
   "title": "Smart Micro Servo",
   "description": "Dual-mode micro servo with angle feedback and unlimited rotation. Servo mode: position control with zero calibration. Wheel mode: continuous rotation with speed control.",
   "soha:moduleType": "actuator",
+  "soha:moduleName": "soha_servo_v1",
 
   "soha:physics": {
     "joint": {

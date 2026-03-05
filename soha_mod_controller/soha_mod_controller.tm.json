@@ -7,6 +7,7 @@
   "title": "Controller Module",
   "description": "Modular input controller with magnetic accessory system. Supports interchangeable button, joystick, and knob caps with automatic detection.",
   "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_controller_v1",
 
   "soha:physics": { "joint": { "type": "fixed" } },
 
