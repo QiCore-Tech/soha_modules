@@ -10,9 +10,15 @@
   "base": "coap://192.168.1.15:5683",
   "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
   "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "peripheral",
   "soha:moduleName": "soha_switch_v1",
-
   "soha:physics": { "joint": { "type": "fixed" } },
 
   "properties": {
@@ -20,9 +26,7 @@
       "type": "object", "readOnly": true, "observable": true,
       "properties": {
         "port_count":      { "type": "integer",                  "description": "Total port count (4)" },
-        "connected_ports": { "type": "array", "items": { "type": "boolean" }, "description": "Per-port connection status" },
-        "error":           { "type": "integer",                  "description": "Error code. 0 = normal" },
-        "ready":           { "type": "boolean",                  "description": "Module initialized and ready" }
+        "connected_ports": { "type": "array", "items": { "type": "boolean" }, "description": "Per-port connection status" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }

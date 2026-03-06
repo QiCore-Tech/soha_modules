@@ -10,9 +10,15 @@
   "base": "coap://192.168.1.10:5683",
   "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
   "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "peripheral",
   "soha:moduleName": "soha_battery_v1",
-
   "soha:physics": { "joint": { "type": "fixed" } },
 
   "properties": {
@@ -25,9 +31,7 @@
         "temperature": { "type": "number",  "unit": "celsius",  "description": "Battery cell temperature" },
         "charging":    { "type": "boolean",                      "description": "USB-C PD actively charging" },
         "output_on":   { "type": "boolean",                      "description": "24V bus output enabled" },
-        "capacity":    { "type": "number",  "unit": "mAh",      "description": "Battery total capacity" },
-        "error":       { "type": "integer",                      "description": "Error code. 0 = normal" },
-        "ready":       { "type": "boolean",                      "description": "Module initialized and ready" }
+        "capacity":    { "type": "number",  "unit": "mAh",      "description": "Battery total capacity" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }

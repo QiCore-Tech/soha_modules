@@ -1,18 +1,24 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    {
-      "soha": "https://soha.ai/vocab/v1",
-      "saref": "https://saref.etsi.org/core/"
-    }
+    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
   ],
+  "@type": ["saref:Actuator", "soha:DualModeServo"],
   "id": "urn:dev:sn:SOHA-SS-001",
   "title": "Smart Micro Servo",
-  "@type": ["saref:Actuator", "soha:DualModeServo"],
+  "description": "Dual-mode micro servo with angle feedback and unlimited rotation. Servo mode: position control with zero calibration. Wheel mode: continuous rotation with speed control.",
+  "base": "coap://192.168.1.21:5683",
+  "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
+  "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "actuator",
   "soha:moduleName": "soha_servo_v1",
-  "description": "Dual-mode micro servo with angle feedback and unlimited rotation. Servo mode: position control with zero calibration. Wheel mode: continuous rotation with speed control.",
-
   "soha:physics": {
     "joint": {
       "type": "continuous",
@@ -27,24 +33,13 @@
     }
   },
 
-  "base": "coap://192.168.1.21:5683",
-
-  "securityDefinitions": {
-    "nosec_sc": { "scheme": "nosec" }
-  },
-  "security": "nosec_sc",
-
   "properties": {
     "status": {
-      "type": "object",
-      "readOnly": true,
-      "observable": true,
+      "type": "object", "readOnly": true, "observable": true,
       "properties": {
         "angle":    { "type": "number",  "unit": "degree",  "description": "Current angle (servo mode) or cumulative rotation (wheel mode)" },
         "velocity": { "type": "number",  "unit": "deg/s",   "description": "Current angular velocity" },
-        "mode":     { "type": "string",  "enum": ["servo", "wheel"], "description": "Current operating mode" },
-        "error":    { "type": "integer",                     "description": "Error code. 0 = normal" },
-        "ready":    { "type": "boolean",                     "description": "Module initialized and ready for commands" }
+        "mode":     { "type": "string",  "enum": ["servo", "wheel"], "description": "Current operating mode" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }
@@ -54,8 +49,7 @@
     "setTarget": {
       "title": "Set servo angle",
       "description": "Servo mode ONLY. Move to target angle. Non-blocking. In wheel mode returns success=false.",
-      "safe": false,
-      "idempotent": false,
+      "safe": false, "idempotent": false,
       "input": {
         "type": "object",
         "properties": {
@@ -70,8 +64,7 @@
     "setSpeed": {
       "title": "Set wheel rotation speed",
       "description": "Wheel mode ONLY. Continuous rotation. Positive=forward, negative=reverse. In servo mode returns success=false.",
-      "safe": false,
-      "idempotent": false,
+      "safe": false, "idempotent": false,
       "input": {
         "type": "object",
         "properties": {
@@ -85,8 +78,7 @@
     "setMode": {
       "title": "Switch operating mode",
       "description": "Switch between servo (position control, unlimited rotation) and wheel (continuous speed control). Motor stops before switching.",
-      "safe": false,
-      "idempotent": true,
+      "safe": false, "idempotent": true,
       "input": {
         "type": "object",
         "properties": {
@@ -100,16 +92,14 @@
     "calibrateZero": {
       "title": "Calibrate zero position",
       "description": "Servo mode ONLY. Set current position as 0°. Persists across power cycles.",
-      "safe": true,
-      "idempotent": true,
+      "safe": true, "idempotent": true,
       "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/calibrateZero", "op": ["invokeaction"] }]
     },
     "emergencyStop": {
       "title": "Emergency stop",
       "description": "Immediately stop all movement in any mode.",
-      "safe": true,
-      "idempotent": true,
+      "safe": true, "idempotent": true,
       "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
     }

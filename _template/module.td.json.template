@@ -6,25 +6,27 @@
       "saref": "https://saref.etsi.org/core/"
     }
   ],
+  "@type": ["{{saref:Type}}", "{{soha:Type}}"],
   "id": "urn:dev:sn:SOHA-XXX-001",
   "title": "{{MODULE_TITLE}}",
-  "@type": ["{{saref:Type}}", "{{soha:Type}}"],
+  "description": "{{MODULE_DESCRIPTION}}",
+  "base": "coap://192.168.1.XX:5683",
+  "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
+  "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "{{actuator|peripheral}}",
   "soha:moduleName": "soha_{{moduleName}}_v1",
-  "description": "{{MODULE_DESCRIPTION}}",
-
   "soha:physics": {
     "joint": {
       "type": "{{revolute|continuous|fixed}}"
     }
   },
-
-  "base": "coap://192.168.1.XX:5683",
-
-  "securityDefinitions": {
-    "nosec_sc": { "scheme": "nosec" }
-  },
-  "security": "nosec_sc",
 
   "properties": {
     "status": {
@@ -32,12 +34,29 @@
       "readOnly": true,
       "observable": true,
       "properties": {
-        "error": { "type": "integer", "description": "Error code. 0 = normal" },
-        "ready": { "type": "boolean", "description": "Module initialized and ready for commands" }
+        "{{status_field}}": { "type": "{{type}}", "description": "{{description}}" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }
   },
 
-  "actions": {}
+  "actions": {
+    "{{actionName}}": {
+      "title": "{{Action Title}}",
+      "description": "{{Action description}}",
+      "safe": false,
+      "idempotent": false,
+      "input": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "output": {
+        "type": "object",
+        "properties": { "success": { "type": "boolean" } },
+        "required": ["success"]
+      },
+      "forms": [{ "href": "/actions/{{actionName}}", "op": ["invokeaction"] }]
+    }
+  }
 }

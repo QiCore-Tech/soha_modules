@@ -1,18 +1,24 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    {
-      "soha": "https://soha.ai/vocab/v1",
-      "saref": "https://saref.etsi.org/core/"
-    }
+    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
   ],
+  "@type": ["saref:Actuator", "soha:ContinuousJoint"],
   "id": "urn:dev:sn:SOHA-SJ-001",
   "title": "Smart Joint Module",
-  "@type": ["saref:Actuator", "soha:ContinuousJoint"],
+  "description": "High-precision continuous joint with FOC control. Integrated brushless motor, encoder and driver. Unlimited rotation with position control, reports angle/velocity/torque.",
+  "base": "coap://192.168.1.11:5683",
+  "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
+  "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "actuator",
   "soha:moduleName": "soha_joint_v1",
-  "description": "High-precision continuous joint with FOC control. Integrated brushless motor, encoder and driver. Unlimited rotation with position control, reports angle/velocity/torque.",
-
   "soha:physics": {
     "joint": {
       "type": "continuous",
@@ -29,24 +35,13 @@
     }
   },
 
-  "base": "coap://192.168.1.11:5683",
-
-  "securityDefinitions": {
-    "nosec_sc": { "scheme": "nosec" }
-  },
-  "security": "nosec_sc",
-
   "properties": {
     "status": {
-      "type": "object",
-      "readOnly": true,
-      "observable": true,
+      "type": "object", "readOnly": true, "observable": true,
       "properties": {
         "angle":    { "type": "number", "unit": "degree", "description": "Current joint angle. 0° is power-on default" },
         "velocity": { "type": "number", "unit": "deg/s",  "description": "Current angular velocity" },
-        "torque":   { "type": "number", "unit": "Nm",     "description": "Current torque load on joint" },
-        "error":    { "type": "integer",                   "description": "Error code. 0 = normal" },
-        "ready":    { "type": "boolean",                   "description": "Module initialized and ready for commands" }
+        "torque":   { "type": "number", "unit": "Nm",     "description": "Current torque load on joint" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }
@@ -56,8 +51,7 @@
     "setTarget": {
       "title": "Set joint target angle",
       "description": "Move joint to target angle at specified speed. Non-blocking: returns immediately, motor begins moving. Use getStatus() to poll position.",
-      "safe": false,
-      "idempotent": false,
+      "safe": false, "idempotent": false,
       "input": {
         "type": "object",
         "properties": {
@@ -77,23 +71,14 @@
         },
         "required": ["angle"]
       },
-      "output": {
-        "type": "object",
-        "properties": { "success": { "type": "boolean" } },
-        "required": ["success"]
-      },
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/setTarget", "op": ["invokeaction"] }]
     },
     "emergencyStop": {
       "title": "Emergency stop",
       "description": "Immediately stop all movement. Non-latch: module returns to ready state after stopping.",
-      "safe": true,
-      "idempotent": true,
-      "output": {
-        "type": "object",
-        "properties": { "success": { "type": "boolean" } },
-        "required": ["success"]
-      },
+      "safe": true, "idempotent": true,
+      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
     }
   },

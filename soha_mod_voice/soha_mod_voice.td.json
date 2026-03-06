@@ -10,9 +10,15 @@
   "base": "coap://192.168.1.51:5683",
   "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
   "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "peripheral",
   "soha:moduleName": "soha_voice_v1",
-
   "soha:physics": { "joint": { "type": "fixed" } },
 
   "properties": {
@@ -21,9 +27,7 @@
       "properties": {
         "is_listening":  { "type": "boolean",                    "description": "Keyword detection active" },
         "volume":        { "type": "number", "unit": "percent",  "description": "Current volume" },
-        "keyword_count": { "type": "integer",                    "description": "Configured keywords count" },
-        "error":         { "type": "integer",                    "description": "Error code. 0 = normal" },
-        "ready":         { "type": "boolean",                    "description": "Module initialized and ready" }
+        "keyword_count": { "type": "integer",                    "description": "Configured keywords count" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }

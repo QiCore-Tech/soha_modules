@@ -10,9 +10,15 @@
   "base": "coap://192.168.1.71:5683",
   "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
   "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "peripheral",
   "soha:moduleName": "soha_led_v1",
-
   "soha:physics": { "joint": { "type": "fixed" } },
 
   "properties": {
@@ -21,9 +27,7 @@
       "properties": {
         "led_count":      { "type": "integer",                   "description": "Detected LEDs on strip" },
         "brightness":     { "type": "number", "unit": "percent", "description": "Global brightness" },
-        "current_effect": { "type": "string",                    "description": "Running effect or 'none'" },
-        "error":          { "type": "integer",                   "description": "Error code. 0 = normal" },
-        "ready":          { "type": "boolean",                   "description": "Module initialized and ready" }
+        "current_effect": { "type": "string",                    "description": "Running effect or 'none'" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }

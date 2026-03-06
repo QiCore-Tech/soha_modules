@@ -1,18 +1,24 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    {
-      "soha": "https://soha.ai/vocab/v1",
-      "saref": "https://saref.etsi.org/core/"
-    }
+    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
   ],
+  "@type": ["saref:Actuator", "soha:ContinuousDrive"],
   "id": "urn:dev:sn:SOHA-HSM-001",
   "title": "High-Speed Drive Module",
-  "@type": ["saref:Actuator", "soha:ContinuousDrive"],
+  "description": "Open-loop high-speed continuous drive motor. Duty-cycle speed control with electronic braking. Speed estimated from back-EMF (no encoder). Suitable for wheeled platforms and mobile chassis.",
+  "base": "coap://192.168.1.31:5683",
+  "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
+  "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "actuator",
   "soha:moduleName": "soha_drive_v1",
-  "description": "Open-loop high-speed continuous drive motor. Duty-cycle speed control with electronic braking. Speed estimated from back-EMF (no encoder). Suitable for wheeled platforms and mobile chassis.",
-
   "soha:physics": {
     "joint": {
       "type": "continuous",
@@ -27,23 +33,12 @@
     }
   },
 
-  "base": "coap://192.168.1.31:5683",
-
-  "securityDefinitions": {
-    "nosec_sc": { "scheme": "nosec" }
-  },
-  "security": "nosec_sc",
-
   "properties": {
     "status": {
-      "type": "object",
-      "readOnly": true,
-      "observable": true,
+      "type": "object", "readOnly": true, "observable": true,
       "properties": {
-        "duty_cycle":  { "type": "number",  "unit": "percent",  "description": "Current duty cycle. 0 = stopped" },
-        "velocity":    { "type": "number",  "unit": "rad/s",    "description": "Estimated speed from back-EMF. Open-loop — actual speed varies with load" },
-        "error":       { "type": "integer",                     "description": "Error code. 0 = normal" },
-        "ready":       { "type": "boolean",                     "description": "Module initialized and ready" }
+        "duty_cycle": { "type": "number",  "unit": "percent",  "description": "Current duty cycle. 0 = stopped" },
+        "velocity":   { "type": "number",  "unit": "rad/s",    "description": "Estimated speed from back-EMF. Open-loop — actual speed varies with load" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }
@@ -53,8 +48,7 @@
     "setSpeed": {
       "title": "Set motor speed",
       "description": "Open-loop duty cycle. Positive=forward, negative=reverse, 0=active brake. Non-blocking.",
-      "safe": false,
-      "idempotent": false,
+      "safe": false, "idempotent": false,
       "input": {
         "type": "object",
         "properties": {
@@ -68,16 +62,14 @@
     "brake": {
       "title": "Active brake",
       "description": "Electronic braking with anti-roll hold. Equivalent to setSpeed(0).",
-      "safe": true,
-      "idempotent": true,
+      "safe": true, "idempotent": true,
       "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/brake", "op": ["invokeaction"] }]
     },
     "emergencyStop": {
       "title": "Emergency stop",
       "description": "Immediate hard stop. No deceleration. Use brake() for controlled stops.",
-      "safe": true,
-      "idempotent": true,
+      "safe": true, "idempotent": true,
       "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
     }

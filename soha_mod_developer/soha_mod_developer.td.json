@@ -10,9 +10,15 @@
   "base": "coap://192.168.1.41:5683",
   "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
   "security": "nosec_sc",
+
+  "links": [{
+    "rel": "type",
+    "href": "https://soha.ai/tm/soha_base.tm.json",
+    "type": "application/tm+json"
+  }],
+
   "soha:moduleType": "peripheral",
   "soha:moduleName": "soha_developer_v1",
-
   "soha:physics": { "joint": { "type": "fixed" } },
 
   "properties": {
@@ -20,9 +26,7 @@
       "type": "object", "readOnly": true, "observable": true,
       "properties": {
         "gpio_count": { "type": "integer",  "description": "Available GPIO pins" },
-        "i2c_count":  { "type": "integer",  "description": "Available I2C/Qwiic ports" },
-        "error":      { "type": "integer",  "description": "Error code. 0 = normal" },
-        "ready":      { "type": "boolean",  "description": "Module initialized and ready" }
+        "i2c_count":  { "type": "integer",  "description": "Available I2C/Qwiic ports" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }
