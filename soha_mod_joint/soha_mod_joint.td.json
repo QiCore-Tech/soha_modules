@@ -1,28 +1,35 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
+    {
+      "soha": "https://soha.ai/vocab/v1",
+      "saref": "https://saref.etsi.org/core/"
+    }
   ],
-  "@type": ["saref:Actuator", "soha:ContinuousJoint"],
+  "@type": [
+    "saref:Actuator",
+    "soha:ContinuousJoint"
+  ],
   "id": "urn:dev:sn:SOHA-SJ-001",
   "title": "Smart Joint Module",
   "description": "High-precision continuous joint with FOC control. Integrated brushless motor, encoder and driver. Unlimited rotation with position control, reports angle/velocity/torque.",
   "base": "coap://192.168.1.11:5683",
-  "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
   "security": "nosec_sc",
-
-  "links": [{
-    "rel": "type",
-    "href": "https://soha.ai/tm/soha_base.tm.json",
-    "type": "application/tm+json"
-  }],
-
   "soha:moduleType": "actuator",
   "soha:moduleName": "soha_joint_v1",
   "soha:physics": {
     "joint": {
       "type": "continuous",
-      "axis": [0, 0, 1],
+      "axis": [
+        0,
+        0,
+        1
+      ],
       "limits": {
         "maxVelocity": 2.175,
         "maxEffort": 87
@@ -34,24 +41,52 @@
       "kv": 20
     }
   },
-
   "properties": {
     "status": {
-      "type": "object", "readOnly": true, "observable": true,
+      "type": "object",
+      "readOnly": true,
+      "observable": true,
       "properties": {
-        "angle":    { "type": "number", "unit": "degree", "description": "Current joint angle. 0° is power-on default" },
-        "velocity": { "type": "number", "unit": "deg/s",  "description": "Current angular velocity" },
-        "torque":   { "type": "number", "unit": "Nm",     "description": "Current torque load on joint" }
+        "angle": {
+          "type": "number",
+          "unit": "degree",
+          "description": "Current joint angle. 0° is power-on default"
+        },
+        "velocity": {
+          "type": "number",
+          "unit": "deg/s",
+          "description": "Current angular velocity"
+        },
+        "torque": {
+          "type": "number",
+          "unit": "Nm",
+          "description": "Current torque load on joint"
+        },
+        "error": {
+          "type": "integer",
+          "description": "Error code. 0 = normal"
+        },
+        "ready": {
+          "type": "boolean",
+          "description": "Module initialized and ready"
+        }
       },
-      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+      "forms": [
+        {
+          "href": "/properties/status",
+          "op": [
+            "readproperty"
+          ]
+        }
+      ]
     }
   },
-
   "actions": {
     "setTarget": {
       "title": "Set joint target angle",
       "description": "Move joint to target angle at specified speed. Non-blocking: returns immediately, motor begins moving. Use getStatus() to poll position.",
-      "safe": false, "idempotent": false,
+      "safe": false,
+      "idempotent": false,
       "input": {
         "type": "object",
         "properties": {
@@ -69,20 +104,56 @@
             "description": "Fraction of maxVelocity. 1.0 = full speed."
           }
         },
-        "required": ["angle"]
+        "required": [
+          "angle"
+        ]
       },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/setTarget", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/setTarget",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "emergencyStop": {
       "title": "Emergency stop",
       "description": "Immediately stop all movement. Non-latch: module returns to ready state after stopping.",
-      "safe": true, "idempotent": true,
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
+      "safe": true,
+      "idempotent": true,
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/emergencyStop",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     }
   },
-
   "events": {
     "targetReached": {
       "title": "Target position reached",
@@ -90,12 +161,29 @@
       "data": {
         "type": "object",
         "properties": {
-          "angle":     { "type": "number", "unit": "degree" },
-          "error":     { "type": "number", "unit": "degree", "description": "Remaining error from target" },
-          "timestamp": { "type": "integer", "unit": "ms" }
+          "angle": {
+            "type": "number",
+            "unit": "degree"
+          },
+          "error": {
+            "type": "number",
+            "unit": "degree",
+            "description": "Remaining error from target"
+          },
+          "timestamp": {
+            "type": "integer",
+            "unit": "ms"
+          }
         }
       },
-      "forms": [{ "href": "/events/targetReached", "op": ["subscribeevent"] }]
+      "forms": [
+        {
+          "href": "/events/targetReached",
+          "op": [
+            "subscribeevent"
+          ]
+        }
+      ]
     },
     "stall": {
       "title": "Motor stall detected",
@@ -103,12 +191,28 @@
       "data": {
         "type": "object",
         "properties": {
-          "angle":     { "type": "number", "unit": "degree" },
-          "torque":    { "type": "number", "unit": "Nm" },
-          "timestamp": { "type": "integer", "unit": "ms" }
+          "angle": {
+            "type": "number",
+            "unit": "degree"
+          },
+          "torque": {
+            "type": "number",
+            "unit": "Nm"
+          },
+          "timestamp": {
+            "type": "integer",
+            "unit": "ms"
+          }
         }
       },
-      "forms": [{ "href": "/events/stall", "op": ["subscribeevent"] }]
+      "forms": [
+        {
+          "href": "/events/stall",
+          "op": [
+            "subscribeevent"
+          ]
+        }
+      ]
     }
   }
 }

@@ -1,64 +1,154 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
+    {
+      "soha": "https://soha.ai/vocab/v1",
+      "saref": "https://saref.etsi.org/core/"
+    }
   ],
-  "@type": ["saref:Device", "soha:BatteryModule"],
+  "@type": [
+    "saref:Device",
+    "soha:BatteryModule"
+  ],
   "id": "urn:dev:sn:SOHA-BAT-001",
   "title": "Battery Module",
   "description": "Smart battery with 24V bus output, USB-C PD charging, and SOC reporting. System power center hosting ESP32 main controller.",
   "base": "coap://192.168.1.10:5683",
-  "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
-  "security": "nosec_sc",
-
-  "links": [{
-    "rel": "type",
-    "href": "https://soha.ai/tm/soha_base.tm.json",
-    "type": "application/tm+json"
-  }],
-
-  "soha:moduleType": "peripheral",
-  "soha:moduleName": "soha_battery_v1",
-  "soha:physics": { "joint": { "type": "fixed" } },
-
-  "properties": {
-    "status": {
-      "type": "object", "readOnly": true, "observable": true,
-      "properties": {
-        "soc":         { "type": "number",  "unit": "percent",  "description": "State of charge (0-100%)" },
-        "voltage":     { "type": "number",  "unit": "V",        "description": "Current battery voltage" },
-        "current":     { "type": "number",  "unit": "A",        "description": "Current draw. Positive=discharging" },
-        "temperature": { "type": "number",  "unit": "celsius",  "description": "Battery cell temperature" },
-        "charging":    { "type": "boolean",                      "description": "USB-C PD actively charging" },
-        "output_on":   { "type": "boolean",                      "description": "24V bus output enabled" },
-        "capacity":    { "type": "number",  "unit": "mAh",      "description": "Battery total capacity" }
-      },
-      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
     }
   },
-
+  "security": "nosec_sc",
+  "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_battery_v1",
+  "soha:physics": {
+    "joint": {
+      "type": "fixed"
+    }
+  },
+  "properties": {
+    "status": {
+      "type": "object",
+      "readOnly": true,
+      "observable": true,
+      "properties": {
+        "soc": {
+          "type": "number",
+          "unit": "percent",
+          "description": "State of charge (0-100%)"
+        },
+        "voltage": {
+          "type": "number",
+          "unit": "V",
+          "description": "Current battery voltage"
+        },
+        "current": {
+          "type": "number",
+          "unit": "A",
+          "description": "Current draw. Positive=discharging"
+        },
+        "temperature": {
+          "type": "number",
+          "unit": "celsius",
+          "description": "Battery cell temperature"
+        },
+        "charging": {
+          "type": "boolean",
+          "description": "USB-C PD actively charging"
+        },
+        "output_on": {
+          "type": "boolean",
+          "description": "24V bus output enabled"
+        },
+        "capacity": {
+          "type": "number",
+          "unit": "mAh",
+          "description": "Battery total capacity"
+        },
+        "error": {
+          "type": "integer",
+          "description": "Error code. 0 = normal"
+        },
+        "ready": {
+          "type": "boolean",
+          "description": "Module initialized and ready"
+        }
+      },
+      "forms": [
+        {
+          "href": "/properties/status",
+          "op": [
+            "readproperty"
+          ]
+        }
+      ]
+    }
+  },
   "actions": {
     "setOutput": {
       "title": "Control power output",
       "description": "Enable/disable 24V bus power to all modules.",
-      "safe": false, "idempotent": true,
+      "safe": false,
+      "idempotent": true,
       "input": {
         "type": "object",
-        "properties": { "enable": { "type": "boolean", "description": "true=on, false=off" } },
-        "required": ["enable"]
+        "properties": {
+          "enable": {
+            "type": "boolean",
+            "description": "true=on, false=off"
+          }
+        },
+        "required": [
+          "enable"
+        ]
       },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/setOutput", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/setOutput",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "emergencyCutoff": {
       "title": "Emergency power cutoff",
       "description": "Immediately cut all power. For electrical emergencies.",
-      "safe": true, "idempotent": true,
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/emergencyCutoff", "op": ["invokeaction"] }]
+      "safe": true,
+      "idempotent": true,
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/emergencyCutoff",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     }
   },
-
   "events": {
     "lowBattery": {
       "title": "Low battery warning",
@@ -66,11 +156,24 @@
       "data": {
         "type": "object",
         "properties": {
-          "soc": { "type": "number", "unit": "percent" },
-          "timestamp": { "type": "integer", "unit": "ms" }
+          "soc": {
+            "type": "number",
+            "unit": "percent"
+          },
+          "timestamp": {
+            "type": "integer",
+            "unit": "ms"
+          }
         }
       },
-      "forms": [{ "href": "/events/lowBattery", "op": ["subscribeevent"] }]
+      "forms": [
+        {
+          "href": "/events/lowBattery",
+          "op": [
+            "subscribeevent"
+          ]
+        }
+      ]
     },
     "overTemperature": {
       "title": "Battery over-temperature warning",
@@ -78,11 +181,24 @@
       "data": {
         "type": "object",
         "properties": {
-          "temperature": { "type": "number", "unit": "celsius" },
-          "timestamp":   { "type": "integer", "unit": "ms" }
+          "temperature": {
+            "type": "number",
+            "unit": "celsius"
+          },
+          "timestamp": {
+            "type": "integer",
+            "unit": "ms"
+          }
         }
       },
-      "forms": [{ "href": "/events/overTemperature", "op": ["subscribeevent"] }]
+      "forms": [
+        {
+          "href": "/events/overTemperature",
+          "op": [
+            "subscribeevent"
+          ]
+        }
+      ]
     }
   }
 }

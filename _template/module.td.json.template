@@ -14,12 +14,6 @@
   "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
   "security": "nosec_sc",
 
-  "links": [{
-    "rel": "type",
-    "href": "https://soha.ai/tm/soha_base.tm.json",
-    "type": "application/tm+json"
-  }],
-
   "soha:moduleType": "{{actuator|peripheral}}",
   "soha:moduleName": "soha_{{moduleName}}_v1",
   "soha:physics": {
@@ -34,7 +28,9 @@
       "readOnly": true,
       "observable": true,
       "properties": {
-        "{{status_field}}": { "type": "{{type}}", "description": "{{description}}" }
+        "{{status_field}}": { "type": "{{type}}", "description": "{{description}}" },
+        "error": { "type": "integer", "description": "Error code. 0 = normal" },
+        "ready": { "type": "boolean", "description": "Module initialized and ready" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
     }

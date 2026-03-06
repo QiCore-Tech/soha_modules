@@ -7,18 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [v0.2.0] - 2026-03-06
 
 ### Changed
-- **Architecture**: Migrated from per-module TM+TD to global base TM + module TD architecture
-  - Added `tm/soha_base.tm.json` — single base TM defining shared `error` and `ready` properties
-  - All module TDs now reference base TM via `links[rel=type]`
-  - Removed `error` and `ready` from individual TD `status.properties` (inherited from base TM)
-  - Deleted all 10 per-module `.tm.json` files
-- **STANDARD.md**: Rewritten for new two-layer architecture (base TM + module TD)
+- **Architecture**: Simplified to pure self-contained TD architecture
+  - Each module has a single `.td.json` with all definitions (properties, actions, events) and instance parameters
+  - Deleted all 10 per-module `.tm.json` files — no TM files remain
+  - No external TM dependency; upper computer can use TD directly without merge logic
+- **STANDARD.md**: Rewritten for self-contained TD architecture
 - **README.md**: Updated architecture description, directory structure, and development workflow
-- **Templates**: Removed `module.tm.json.template`; updated `module.td.json.template` with `links` and no error/ready
-
-### Notes
-- Upper computer must implement TM merge logic: TD module fields + base TM shared fields = complete model
-- Merged result is identical to previous full TD — no functional change for consumers after merge
+- **Templates**: Removed `module.tm.json.template`; updated `module.td.json.template`
 
 ## [v0.1.3] - 2026-03-06
 

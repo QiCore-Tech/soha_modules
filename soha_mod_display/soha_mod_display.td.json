@@ -1,67 +1,276 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    { "soha": "https://soha.ai/vocab/v1", "saref": "https://saref.etsi.org/core/" }
+    {
+      "soha": "https://soha.ai/vocab/v1",
+      "saref": "https://saref.etsi.org/core/"
+    }
   ],
-  "@type": ["saref:Device", "soha:DisplayModule"],
+  "@type": [
+    "saref:Device",
+    "soha:DisplayModule"
+  ],
   "id": "urn:dev:sn:SOHA-DSP-001",
   "title": "Display Module",
   "description": "240x240 color display at 24fps+. Supports animated expressions, text rendering, and solid fills. Multiple displays can sync for distributed content.",
   "base": "coap://192.168.1.61:5683",
-  "securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
-  "security": "nosec_sc",
-
-  "links": [{
-    "rel": "type",
-    "href": "https://soha.ai/tm/soha_base.tm.json",
-    "type": "application/tm+json"
-  }],
-
-  "soha:moduleType": "peripheral",
-  "soha:moduleName": "soha_display_v1",
-  "soha:physics": { "joint": { "type": "fixed" } },
-
-  "properties": {
-    "status": {
-      "type": "object", "readOnly": true, "observable": true,
-      "properties": {
-        "width":               { "type": "integer",                   "description": "Screen width (240)" },
-        "height":              { "type": "integer",                   "description": "Screen height (240)" },
-        "brightness":          { "type": "number", "unit": "percent", "description": "Current brightness" },
-        "current_expression":  { "type": "string",                    "description": "Active expression name, or 'none'" }
-      },
-      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
     }
   },
-
+  "security": "nosec_sc",
+  "soha:moduleType": "peripheral",
+  "soha:moduleName": "soha_display_v1",
+  "soha:physics": {
+    "joint": {
+      "type": "fixed"
+    }
+  },
+  "properties": {
+    "status": {
+      "type": "object",
+      "readOnly": true,
+      "observable": true,
+      "properties": {
+        "width": {
+          "type": "integer",
+          "description": "Screen width (240)"
+        },
+        "height": {
+          "type": "integer",
+          "description": "Screen height (240)"
+        },
+        "brightness": {
+          "type": "number",
+          "unit": "percent",
+          "description": "Current brightness"
+        },
+        "current_expression": {
+          "type": "string",
+          "description": "Active expression name, or 'none'"
+        },
+        "error": {
+          "type": "integer",
+          "description": "Error code. 0 = normal"
+        },
+        "ready": {
+          "type": "boolean",
+          "description": "Module initialized and ready"
+        }
+      },
+      "forms": [
+        {
+          "href": "/properties/status",
+          "op": [
+            "readproperty"
+          ]
+        }
+      ]
+    }
+  },
   "actions": {
     "showExpression": {
-      "title": "Show expression", "description": "Display animated expression from built-in library. Loops until next command.",
-      "safe": false, "idempotent": true,
-      "input": { "type": "object", "properties": { "name": { "type": "string", "enum": ["smile", "sad", "blink", "surprised", "angry", "sleep", "thinking", "heart"] } }, "required": ["name"] },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/showExpression", "op": ["invokeaction"] }]
+      "title": "Show expression",
+      "description": "Display animated expression from built-in library. Loops until next command.",
+      "safe": false,
+      "idempotent": true,
+      "input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "smile",
+              "sad",
+              "blink",
+              "surprised",
+              "angry",
+              "sleep",
+              "thinking",
+              "heart"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/showExpression",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "drawText": {
-      "title": "Draw text", "description": "Render text at position. Overlays on current content.",
-      "safe": false, "idempotent": false,
-      "input": { "type": "object", "properties": { "text": { "type": "string", "maxLength": 64 }, "x": { "type": "integer" }, "y": { "type": "integer" }, "size": { "type": "integer", "minimum": 1, "maximum": 4, "default": 1 }, "r": { "type": "integer", "minimum": 0, "maximum": 255, "default": 255 }, "g": { "type": "integer", "minimum": 0, "maximum": 255, "default": 255 }, "b": { "type": "integer", "minimum": 0, "maximum": 255, "default": 255 } }, "required": ["text", "x", "y"] },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/drawText", "op": ["invokeaction"] }]
+      "title": "Draw text",
+      "description": "Render text at position. Overlays on current content.",
+      "safe": false,
+      "idempotent": false,
+      "input": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "x": {
+            "type": "integer"
+          },
+          "y": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "default": 1
+          },
+          "r": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255,
+            "default": 255
+          },
+          "g": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255,
+            "default": 255
+          },
+          "b": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255,
+            "default": 255
+          }
+        },
+        "required": [
+          "text",
+          "x",
+          "y"
+        ]
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/drawText",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "fillScreen": {
-      "title": "Fill screen", "description": "Solid color fill. r=g=b=0 for black (clear).",
-      "safe": false, "idempotent": true,
-      "input": { "type": "object", "properties": { "r": { "type": "integer", "minimum": 0, "maximum": 255, "default": 0 }, "g": { "type": "integer", "minimum": 0, "maximum": 255, "default": 0 }, "b": { "type": "integer", "minimum": 0, "maximum": 255, "default": 0 } } },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/fillScreen", "op": ["invokeaction"] }]
+      "title": "Fill screen",
+      "description": "Solid color fill. r=g=b=0 for black (clear).",
+      "safe": false,
+      "idempotent": true,
+      "input": {
+        "type": "object",
+        "properties": {
+          "r": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255,
+            "default": 0
+          },
+          "g": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255,
+            "default": 0
+          },
+          "b": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255,
+            "default": 0
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/fillScreen",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "setBrightness": {
-      "title": "Set brightness", "description": "Adjust backlight. 0=off, 1.0=max.",
-      "safe": true, "idempotent": true,
-      "input": { "type": "object", "properties": { "level": { "type": "number", "unit": "percent", "minimum": 0.0, "maximum": 1.0 } }, "required": ["level"] },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/setBrightness", "op": ["invokeaction"] }]
+      "title": "Set brightness",
+      "description": "Adjust backlight. 0=off, 1.0=max.",
+      "safe": true,
+      "idempotent": true,
+      "input": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number",
+            "unit": "percent",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/setBrightness",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     }
   }
 }
