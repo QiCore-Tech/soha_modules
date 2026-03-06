@@ -8,6 +8,7 @@
 
 - TM ID: `urn:soha:tm:soha_mod_switch`
 - TD ID: `urn:dev:sn:SOHA-SW-001`（示例实例）
+- moduleName: `soha_switch_v1`
 
 ## 关键特性
 

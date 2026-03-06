@@ -21,8 +21,9 @@
       "properties": {
         "width":      { "type": "integer",                   "description": "Screen width (240)" },
         "height":     { "type": "integer",                   "description": "Screen height (240)" },
-        "brightness": { "type": "number", "unit": "percent", "description": "Current brightness" },
-        "error":      { "type": "integer",                   "description": "Error code. 0 = normal" },
+        "brightness":          { "type": "number", "unit": "percent", "description": "Current brightness" },
+        "current_expression":  { "type": "string",                   "description": "Active expression name, or 'none'" },
+        "error":               { "type": "integer",                  "description": "Error code. 0 = normal" },
         "ready":      { "type": "boolean",                   "description": "Module initialized and ready" }
       },
       "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]

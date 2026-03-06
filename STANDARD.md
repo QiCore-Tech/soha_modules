@@ -38,6 +38,7 @@ soha_mod_xxxx/
 | `title` | string | 英文人类可读名称 |
 | `description` | string | 英文功能描述 |
 | `soha:moduleType` | string | `"actuator"` / `"peripheral"` / `"kit"` |
+| `soha:moduleName` | string | 模组全局唯一标识符（如 `"soha_joint_v1"`） |
 | `soha:physics` | object | 物理模型（见 §5） |
 | `properties` | object | 至少包含 `status` |
 | `actions` | object | 至少包含一个 action |
@@ -93,8 +94,8 @@ TM 是设备类型模板，**不应**包含实例信息：
 
 | joint.type | 含义 | 必填字段 | 适用模组 |
 |------------|------|----------|----------|
-| `revolute` | 有限角度旋转 | `axis`, `limits.lower`, `limits.upper`, `limits.maxVelocity`, `limits.maxEffort` | 智能关节、微舵机 |
-| `continuous` | 无限旋转 | `axis` | 高速动力 |
+| `revolute` | 有限角度旋转 | `axis`, `limits.lower`, `limits.upper`, `limits.maxVelocity`, `limits.maxEffort` | （预留） |
+| `continuous` | 无限旋转 | `axis`, `limits.maxVelocity`, `limits.maxEffort` | 关节、舵机、高速动力 |
 | `fixed` | 不运动 | 无额外字段 | 所有 peripheral |
 | `prismatic` | 直线平移 | `axis`, `limits` | （预留） |
 

@@ -8,6 +8,7 @@
 
 - TM ID: `urn:soha:tm:soha_mod_display`
 - TD ID: `urn:dev:sn:SOHA-DSP-001`（示例实例）
+- moduleName: `soha_display_v1`
 
 ## 关键特性
 
@@ -33,6 +34,7 @@
 | `width` | integer | 屏幕宽度 (240) |
 | `height` | integer | 屏幕高度 (240) |
 | `brightness` | number (percent) | 当前亮度 |
+| `current_expression` | string | 当前表情名称，无则为 'none' |
 | `error` | integer | 错误码 |
 | `ready` | boolean | 模组已初始化 |
 

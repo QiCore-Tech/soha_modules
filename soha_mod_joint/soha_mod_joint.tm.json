@@ -88,5 +88,34 @@
       },
       "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
     }
+  },
+
+  "events": {
+    "targetReached": {
+      "title": "Target position reached",
+      "description": "Joint angle reached within deadband of target. Fires once per setTarget command.",
+      "data": {
+        "type": "object",
+        "properties": {
+          "angle":     { "type": "number", "unit": "degree" },
+          "error":     { "type": "number", "unit": "degree", "description": "Remaining error from target" },
+          "timestamp": { "type": "integer", "unit": "ms" }
+        }
+      },
+      "forms": [{ "href": "/events/targetReached", "op": ["subscribeevent"] }]
+    },
+    "stall": {
+      "title": "Motor stall detected",
+      "description": "Torque limit reached while position error remains. Motor cannot reach target.",
+      "data": {
+        "type": "object",
+        "properties": {
+          "angle":     { "type": "number", "unit": "degree" },
+          "torque":    { "type": "number", "unit": "Nm" },
+          "timestamp": { "type": "integer", "unit": "ms" }
+        }
+      },
+      "forms": [{ "href": "/events/stall", "op": ["subscribeevent"] }]
+    }
   }
 }

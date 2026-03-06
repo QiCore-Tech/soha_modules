@@ -8,12 +8,25 @@
 
 - TM ID: `urn:soha:tm:soha_mod_joint`
 - TD ID: `urn:dev:sn:SOHA-SJ-001`（示例实例）
+- moduleName: `soha_joint_v1`
 
 ## 关键特性
 
 - FOC 控制：磁场定向控制，精密力矩输出
 - 一体化：集成无刷电机 + 编码器 + 驱动板
 - 无限旋转：无角度限位，支持任意方向连续旋转
+- maxVelocity 2.175 rad/s，maxEffort 87 Nm
+
+## 物理参数 (soha:physics)
+
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| joint.type | continuous | 无限旋转 |
+| limits.maxVelocity | 2.175 rad/s | 最大角速度 |
+| limits.maxEffort | 87 Nm | 最大扭矩 |
+| actuator.type | position | 位置控制 |
+| actuator.kp | 1000 | P 增益 |
+| actuator.kv | 20 | D 增益 |
 
 ## 接口概览
 
@@ -36,9 +49,11 @@
 
 ### Events
 
-无。关节模组是纯输出设备。
+| Event | 说明 |
+|-------|------|
+| `targetReached` | 关节角度到达目标（死区内），含剩余误差 |
+| `stall` | 扭矩达到上限但位置误差仍存在，电机无法到达目标 |
 
 ## 待确认
 
-- [ ] maxVelocity 和 maxEffort 的实际数值
 - [ ] kp/kv PID 增益是否需要可调

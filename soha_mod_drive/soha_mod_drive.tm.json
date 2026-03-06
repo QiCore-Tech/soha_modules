@@ -8,14 +8,18 @@
   ],
   "@type": "tm:ThingModel",
   "title": "High-Speed Drive Module",
-  "description": "Open-loop high-speed continuous drive motor. Duty-cycle speed control with electronic braking. Suitable for wheeled platforms and mobile chassis.",
+  "description": "Open-loop high-speed continuous drive motor. Duty-cycle speed control with electronic braking. Speed estimated from back-EMF (no encoder). Suitable for wheeled platforms and mobile chassis.",
   "soha:moduleType": "actuator",
   "soha:moduleName": "soha_drive_v1",
 
   "soha:physics": {
     "joint": {
       "type": "continuous",
-      "axis": [0, 0, 1]
+      "axis": [0, 0, 1],
+      "limits": {
+        "maxVelocity": 20.94,
+        "maxEffort": 2.0
+      }
     },
     "actuator": {
       "type": "velocity"
@@ -29,6 +33,7 @@
       "observable": true,
       "properties": {
         "duty_cycle":  { "type": "number",  "unit": "percent",  "description": "Current duty cycle. 0 = stopped" },
+        "velocity":    { "type": "number",  "unit": "rad/s",    "description": "Estimated speed from back-EMF. Open-loop — actual speed varies with load" },
         "error":       { "type": "integer",                     "description": "Error code. 0 = normal" },
         "ready":       { "type": "boolean",                     "description": "Module initialized and ready" }
       },
@@ -67,6 +72,33 @@
       "idempotent": true,
       "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
+    }
+  },
+
+  "events": {
+    "stall": {
+      "title": "Motor stall detected",
+      "description": "Back-EMF indicates motor stalled or heavily loaded.",
+      "data": {
+        "type": "object",
+        "properties": {
+          "duty_cycle": { "type": "number", "unit": "percent" },
+          "timestamp":  { "type": "integer", "unit": "ms" }
+        }
+      },
+      "forms": [{ "href": "/events/stall", "op": ["subscribeevent"] }]
+    },
+    "overcurrent": {
+      "title": "Overcurrent warning",
+      "description": "Motor current exceeds safe threshold.",
+      "data": {
+        "type": "object",
+        "properties": {
+          "current":   { "type": "number", "unit": "A" },
+          "timestamp": { "type": "integer", "unit": "ms" }
+        }
+      },
+      "forms": [{ "href": "/events/overcurrent", "op": ["subscribeevent"] }]
     }
   }
 }

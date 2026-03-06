@@ -69,6 +69,11 @@
       "title": "Knob rotation", "description": "[knob]",
       "data": { "type": "object", "properties": { "delta": { "type": "integer" }, "timestamp": { "type": "integer", "unit": "ms" } } },
       "forms": [{ "href": "/events/knobTurned", "op": ["subscribeevent"] }]
+    },
+    "joystickMoved": {
+      "title": "Joystick position changed", "description": "[joystick] Fires when position exceeds deadzone threshold.",
+      "data": { "type": "object", "properties": { "x": { "type": "number", "minimum": -1.0, "maximum": 1.0 }, "y": { "type": "number", "minimum": -1.0, "maximum": 1.0 }, "timestamp": { "type": "integer", "unit": "ms" } } },
+      "forms": [{ "href": "/events/joystickMoved", "op": ["subscribeevent"] }]
     }
   }
 }

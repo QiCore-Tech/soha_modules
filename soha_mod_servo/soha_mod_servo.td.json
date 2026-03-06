@@ -113,5 +113,32 @@
       "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
     }
+  },
+
+  "events": {
+    "targetReached": {
+      "title": "Target position reached",
+      "description": "Servo mode: angle reached within deadband. Fires once per setTarget command.",
+      "data": {
+        "type": "object",
+        "properties": {
+          "angle":     { "type": "number", "unit": "degree" },
+          "timestamp": { "type": "integer", "unit": "ms" }
+        }
+      },
+      "forms": [{ "href": "/events/targetReached", "op": ["subscribeevent"] }]
+    },
+    "stall": {
+      "title": "Motor stall detected",
+      "description": "Motor current indicates stall. Useful for gripper contact detection.",
+      "data": {
+        "type": "object",
+        "properties": {
+          "angle":     { "type": "number", "unit": "degree" },
+          "timestamp": { "type": "integer", "unit": "ms" }
+        }
+      },
+      "forms": [{ "href": "/events/stall", "op": ["subscribeevent"] }]
+    }
   }
 }

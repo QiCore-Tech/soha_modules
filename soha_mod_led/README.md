@@ -8,6 +8,7 @@
 
 - TM ID: `urn:soha:tm:soha_mod_led`
 - TD ID: `urn:dev:sn:SOHA-LED-001`（示例实例）
+- moduleName: `soha_led_v1`
 
 ## 关键特性
 

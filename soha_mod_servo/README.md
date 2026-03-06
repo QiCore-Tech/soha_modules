@@ -8,12 +8,23 @@
 
 - TM ID: `urn:soha:tm:soha_mod_servo`
 - TD ID: `urn:dev:sn:SOHA-SS-001`（示例实例）
+- moduleName: `soha_servo_v1`
 
 ## 关键特性
 
-- 双模式：servo（位置控制 ±180°）↔ wheel（360° 连续旋转）
+- 双模式：servo（位置控制，无限旋转）↔ wheel（连续旋转速度控制）
 - 角度检测：支持角度回读
 - 零位校准：软件一键归零
+- maxVelocity 6.28 rad/s，maxEffort 0.25 Nm
+
+## 物理参数 (soha:physics)
+
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| joint.type | continuous | 无限旋转 |
+| limits.maxVelocity | 6.28 rad/s | 最大角速度 |
+| limits.maxEffort | 0.25 Nm | 最大扭矩 |
+| actuator.type | position | 位置控制 |
 
 ## 接口概览
 
@@ -39,10 +50,11 @@
 
 ### Events
 
-无。
+| Event | 说明 |
+|-------|------|
+| `targetReached` | servo 模式下到达目标角度（死区内） |
+| `stall` | 电机堵转检测，可用于夹爪接触判定 |
 
 ## 待确认
 
-- [ ] servo 模式实际角度范围
 - [ ] wheel 模式下 angle 回读的含义
-- [ ] maxVelocity 和 maxEffort 的实际数值

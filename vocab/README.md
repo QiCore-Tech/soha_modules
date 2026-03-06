@@ -17,6 +17,7 @@ soha: https://soha.ai/vocab/v1#
 | 属性 | 用途 | 适用范围 |
 |------|------|----------|
 | `soha:moduleType` | 模组分类：`actuator` / `peripheral` / `kit` | 所有模组 |
+| `soha:moduleName` | 模组全局唯一标识符（如 `"soha_joint_v1"`） | 所有模组 |
 | `soha:physics` | 物理模型（关节类型、轴向、限位、控制模式） | 所有模组 |
 | `soha:interfaceType` | 接口类型：`skill`（组合操作）/ `action`（透传） | 仅 kit |
 | `soha:type` | 嵌入式数据类型提示：`f32` / `u8` / `u32` / `bool` | action input/output 字段 |

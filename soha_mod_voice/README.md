@@ -8,6 +8,7 @@
 
 - TM ID: `urn:soha:tm:soha_mod_voice`
 - TD ID: `urn:dev:sn:SOHA-VOI-001`（示例实例）
+- moduleName: `soha_voice_v1`
 
 ## 关键特性
 

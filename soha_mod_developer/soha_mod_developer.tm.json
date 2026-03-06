@@ -67,5 +67,22 @@
       "output": { "type": "object", "properties": { "success": { "type": "boolean" }, "value": { "type": "boolean" } }, "required": ["success"] },
       "forms": [{ "href": "/actions/gpioRead", "op": ["invokeaction"] }]
     }
+  },
+
+  "events": {
+    "gpioInterrupt": {
+      "title": "GPIO interrupt",
+      "description": "Input pin state changed. Requires pin configured as input or input_pullup.",
+      "data": {
+        "type": "object",
+        "properties": {
+          "pin":       { "type": "integer", "minimum": 0, "maximum": 7 },
+          "value":     { "type": "boolean", "description": "New pin state" },
+          "edge":      { "type": "string", "enum": ["rising", "falling"] },
+          "timestamp": { "type": "integer", "unit": "ms" }
+        }
+      },
+      "forms": [{ "href": "/events/gpioInterrupt", "op": ["subscribeevent"] }]
+    }
   }
 }

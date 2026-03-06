@@ -8,6 +8,7 @@
 
 - TM ID: `urn:soha:tm:soha_mod_developer`
 - TD ID: `urn:dev:sn:SOHA-DEV-001`（示例实例）
+- moduleName: `soha_developer_v1`
 
 ## 关键特性
 
@@ -39,7 +40,9 @@
 
 ### Events
 
-无。
+| Event | 说明 |
+|-------|------|
+| `gpioInterrupt` | GPIO 输入引脚电平变化（上升沿/下降沿） |
 
 ## 待确认
 

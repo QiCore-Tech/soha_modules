@@ -76,6 +76,7 @@ soha_modules/
 | 字段 | 说明 |
 |------|------|
 | `soha:moduleType` | 模组分类：`actuator` / `peripheral` / `kit` |
+| `soha:moduleName` | 模组全局唯一标识符（如 `"soha_joint_v1"`） |
 | `soha:physics` | 物理模型（关节类型、轴向、限位、控制模式） |
 | `soha:interfaceType` | 接口类型（仅 kit） |
 | `soha:type` | 嵌入式数据类型提示 |

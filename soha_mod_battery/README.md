@@ -8,6 +8,7 @@
 
 - TM ID: `urn:soha:tm:soha_mod_battery`
 - TD ID: `urn:dev:sn:SOHA-BAT-001`（示例实例）
+- moduleName: `soha_battery_v1`
 
 ## 关键特性
 
@@ -34,6 +35,7 @@
 | `temperature` | number (celsius) | 电芯温度 |
 | `charging` | boolean | 正在充电 |
 | `output_on` | boolean | 电源输出已开启 |
+| `capacity` | number (mAh) | 电池总容量 |
 | `error` | integer | 错误码 |
 | `ready` | boolean | 模组已初始化 |
 
@@ -42,6 +44,7 @@
 | Event | 说明 |
 |-------|------|
 | `lowBattery` | SOC 低于临界阈值 |
+| `overTemperature` | 电芯温度超过安全范围 |
 
 ## 待确认
 

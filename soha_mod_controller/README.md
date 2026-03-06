@@ -8,6 +8,7 @@
 
 - TM ID: `urn:soha:tm:soha_mod_controller`
 - TD ID: `urn:dev:sn:SOHA-CTL-001`（示例实例）
+- moduleName: `soha_controller_v1`
 
 ## 关键特性
 
@@ -47,6 +48,7 @@
 | `buttonReleased` | button | 释放 |
 | `longPress` | button | 长按 |
 | `knobTurned` | knob | 旋转 |
+| `joystickMoved` | joystick | 摇杆位置变化（超过死区阈值） |
 
 ## 待确认
 

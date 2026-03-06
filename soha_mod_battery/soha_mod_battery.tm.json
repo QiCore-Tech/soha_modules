@@ -21,6 +21,7 @@
         "temperature": { "type": "number",  "unit": "celsius",  "description": "Battery cell temperature" },
         "charging":    { "type": "boolean",                      "description": "USB-C PD actively charging" },
         "output_on":   { "type": "boolean",                      "description": "24V bus output enabled" },
+        "capacity":    { "type": "number",  "unit": "mAh",      "description": "Battery total capacity" },
         "error":       { "type": "integer",                      "description": "Error code. 0 = normal" },
         "ready":       { "type": "boolean",                      "description": "Module initialized and ready" }
       },
@@ -62,6 +63,18 @@
         }
       },
       "forms": [{ "href": "/events/lowBattery", "op": ["subscribeevent"] }]
+    },
+    "overTemperature": {
+      "title": "Battery over-temperature warning",
+      "description": "Cell temperature exceeds safe operating range.",
+      "data": {
+        "type": "object",
+        "properties": {
+          "temperature": { "type": "number", "unit": "celsius" },
+          "timestamp":   { "type": "integer", "unit": "ms" }
+        }
+      },
+      "forms": [{ "href": "/events/overTemperature", "op": ["subscribeevent"] }]
     }
   }
 }
