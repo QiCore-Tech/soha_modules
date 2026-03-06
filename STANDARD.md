@@ -4,55 +4,72 @@
 
 ---
 
-## 1. 命名规范
+## 1. 架构概述
+
+SOHA 采用**纯 TD 架构**：每个模块一个自包含的 Thing Description，包含完整定义。
+
+- **`soha_mod_xxxx.td.json`**：每个模块一个 TD，包含所有 properties、actions、events 定义及实例参数（id、base、security）。由嵌入式设备存储并直接 dump 返回。
+- **无 TM 依赖**：上位机拿到 TD 即可直接使用，不需要额外获取或合并 Thing Model。
+
+### 1.1 交互流程
+
+```
+上位机 ──GET TD──▶ 嵌入式设备（直接 dump，零解析开销）
+       ◀─完整TD──  包含全部定义，可直接使用
+```
+
+### 1.2 设计原则
+
+- **TD 完全自包含**：每个 TD 包含该模块的所有信息，单文件即完整交互模型
+- **设备端零解析**：嵌入式设备只需将 flash 中的 TD 原样输出
+- **版本一致性由固件保证**：TD 随固件烧录，无外部依赖
+
+---
+
+## 2. 命名规范
 
 - 目录名：`soha_mod_xxxx`，全小写，下划线分隔
-- TM 文件：`soha_mod_xxxx.tm.json`
 - TD 文件：`soha_mod_xxxx.td.json`
-- TM ID：`urn:soha:tm:soha_mod_xxxx`
 - TD ID：`urn:dev:sn:SOHA-XXX-NNN`（XXX = 模组缩写，NNN = 序列号）
 
 ---
 
-## 2. 目录结构
+## 3. 目录结构
 
 ```
-soha_mod_xxxx/
-├── README.md                      # 模组介绍（中文）
-├── soha_mod_xxxx.tm.json          # Thing Model（规范源）
-├── soha_mod_xxxx.td.json          # Thing Description（示例实例）
-└── mesh/                          # 3D 模型（预留）
-    └── .gitkeep
+soha_modules/
+├── _template/
+│   └── module.td.json.template       # TD 模板
+├── soha_mod_xxxx/
+│   ├── README.md                     # 模组介绍（中文）
+│   ├── soha_mod_xxxx.td.json         # Thing Description（完整自包含定义）
+│   └── mesh/                         # 3D 模型（预留）
+│       └── .gitkeep
 ```
 
 ---
 
-## 3. TM 必填字段
+## 4. TD 必填字段
 
-### 3.1 顶层必填
+### 4.1 顶层必填
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | `@context` | array | 必须含 `"https://www.w3.org/2022/wot/td/v1.1"` + `soha`/`saref` 命名空间 |
-| `@type` | string | 必须为 `"tm:ThingModel"` |
+| `@type` | array | 具体设备类型（如 `["saref:Actuator", "soha:ContinuousJoint"]`） |
+| `id` | string | 设备实例标识 `"urn:dev:sn:SOHA-XXX-NNN"` |
 | `title` | string | 英文人类可读名称 |
 | `description` | string | 英文功能描述 |
+| `base` | string | CoAP 端点 `"coap://<ip>:<port>"` |
+| `securityDefinitions` | object | 安全方案定义 |
+| `security` | string | 安全方案引用 |
 | `soha:moduleType` | string | `"actuator"` / `"peripheral"` / `"kit"` |
 | `soha:moduleName` | string | 模组全局唯一标识符（如 `"soha_joint_v1"`） |
-| `soha:physics` | object | 物理模型（见 §5） |
+| `soha:physics` | object | 物理模型（见 §6） |
 | `properties` | object | 至少包含 `status` |
 | `actions` | object | 至少包含一个 action |
 
-### 3.2 TM 不应包含的字段
-
-TM 是设备类型模板，**不应**包含实例信息：
-
-- `id` — 具体设备序列号
-- `base` — 具体 CoAP 端点
-- `security` — 安全方案引用
-- `securityDefinitions` — 安全方案定义
-
-### 3.3 `@context` 标准格式
+### 4.2 `@context` 标准格式
 
 ```json
 "@context": [
@@ -64,9 +81,16 @@ TM 是设备类型模板，**不应**包含实例信息：
 ]
 ```
 
+### 4.3 安全方案
+
+```json
+"securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
+"security": "nosec_sc"
+```
+
 ---
 
-## 4. moduleType 分类规则
+## 5. moduleType 分类规则
 
 | 类型 | 判定标准 | 示例 |
 |------|----------|------|
@@ -78,9 +102,9 @@ TM 是设备类型模板，**不应**包含实例信息：
 
 ---
 
-## 5. physics 填写指南
+## 6. physics 填写指南
 
-### 5.1 所有模组必填
+### 6.1 所有模组必填
 
 ```json
 "soha:physics": {
@@ -90,7 +114,7 @@ TM 是设备类型模板，**不应**包含实例信息：
 }
 ```
 
-### 5.2 按 joint.type 分类
+### 6.2 按 joint.type 分类
 
 | joint.type | 含义 | 必填字段 | 适用模组 |
 |------------|------|----------|----------|
@@ -99,7 +123,7 @@ TM 是设备类型模板，**不应**包含实例信息：
 | `fixed` | 不运动 | 无额外字段 | 所有 peripheral |
 | `prismatic` | 直线平移 | `axis`, `limits` | （预留） |
 
-### 5.3 actuator 字段（仅 actuator 模组）
+### 6.3 actuator 字段（仅 actuator 模组）
 
 ```json
 "actuator": {
@@ -116,16 +140,16 @@ TM 是设备类型模板，**不应**包含实例信息：
 
 ---
 
-## 6. Actions 设计规范
+## 7. Actions 设计规范
 
-### 6.1 通用规则
+### 7.1 通用规则
 
 - 每个 action 必须有 `forms`（至少一个 CoAP 绑定）
 - 每个 action 的 `output` 必须包含 `success: boolean`
 - 必须标注 `safe` 和 `idempotent`
 - `description` 必须说明：阻塞/非阻塞行为、模式限制、副作用
 
-### 6.2 output 规则
+### 7.2 output 规则
 
 **标准 output**（命令类 action）：
 
@@ -150,7 +174,7 @@ TM 是设备类型模板，**不应**包含实例信息：
 }
 ```
 
-### 6.3 safe / idempotent 标注规则
+### 7.3 safe / idempotent 标注规则
 
 | 标注 | 含义 | 示例 |
 |------|------|------|
@@ -159,7 +183,7 @@ TM 是设备类型模板，**不应**包含实例信息：
 | `idempotent: true` | 重复调用结果相同 | setMode("servo")、emergencyStop |
 | `idempotent: false` | 重复调用可能有不同效果 | setTarget(angle)（追踪运动） |
 
-### 6.4 actuator 专属
+### 7.4 actuator 专属
 
 所有 `actuator` 模组**必须**提供 `emergencyStop` action：
 
@@ -178,26 +202,26 @@ TM 是设备类型模板，**不应**包含实例信息：
 }
 ```
 
-### 6.5 forms 格式
+### 7.5 forms 格式
 
-TM 中使用相对路径（无 host）：
+TD 中使用相对路径，运行时由 `base` 字段拼接完整 URL：
 
 ```json
 "forms": [{ "href": "/actions/actionName", "op": ["invokeaction"] }]
 ```
 
-TD 中通过 `base` 字段拼接完整 URL。
-
 ---
 
-## 7. Status 设计规范
+## 8. Status 设计规范
 
-所有模组必须有 `properties.status`，且**必须**包含：
+所有模组必须有 `properties.status`，且**必须**包含以下公共字段：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | `error` | integer | 错误码，0 = 正常 |
 | `ready` | boolean | 模组已初始化并可接受命令 |
+
+在此基础上添加模块特有的状态字段。示例（joint 模块）：
 
 ```json
 "status": {
@@ -205,8 +229,11 @@ TD 中通过 `base` 字段拼接完整 URL。
   "readOnly": true,
   "observable": true,
   "properties": {
-    "error": { "type": "integer", "description": "Error code. 0 = normal" },
-    "ready": { "type": "boolean", "description": "Module initialized and ready for commands" }
+    "angle":    { "type": "number", "unit": "degree", "description": "Current joint angle" },
+    "velocity": { "type": "number", "unit": "deg/s",  "description": "Current angular velocity" },
+    "torque":   { "type": "number", "unit": "Nm",     "description": "Current torque load" },
+    "error":    { "type": "integer",                   "description": "Error code. 0 = normal" },
+    "ready":    { "type": "boolean",                   "description": "Module initialized and ready" }
   },
   "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
 }
@@ -214,30 +241,12 @@ TD 中通过 `base` 字段拼接完整 URL。
 
 ---
 
-## 8. TD 实例化（从 TM 生成 TD）
-
-将 TM 转换为 TD 的步骤：
-
-1. **移除** `"@type": "tm:ThingModel"`
-2. **添加** `@type` 为具体设备类型数组（如 `["saref:Actuator", "soha:RevoluteJoint"]`）
-3. **添加** `id`：`"urn:dev:sn:SOHA-XXX-NNN"`
-4. **添加** `base`：`"coap://<ip>:<port>"`
-5. **添加** `securityDefinitions` 和 `security`：
-
-```json
-"securityDefinitions": { "nosec_sc": { "scheme": "nosec" } },
-"security": "nosec_sc"
-```
-
----
-
 ## 9. 发布前验证清单
 
 - [ ] JSON 语法合法（`json.loads()` 无异常）
-- [ ] TM 有 `"@type": "tm:ThingModel"`
-- [ ] TM 无 `id`、`base`、`security`、`securityDefinitions`
 - [ ] TD 有 `id`、`base`、`security`、`securityDefinitions`
 - [ ] `@context` 包含 WoT TD v1.1 URL
+- [ ] `@type` 为具体设备类型数组
 - [ ] `soha:moduleType` 为 `actuator` / `peripheral` / `kit` 之一
 - [ ] `soha:physics` 存在且 `joint.type` 正确
 - [ ] `properties.status` 包含 `error` + `ready`

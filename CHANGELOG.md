@@ -4,6 +4,17 @@ All notable changes to the SOHA Module Registry will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [v0.2.0] - 2026-03-06
+
+### Changed
+- **Architecture**: Simplified to pure self-contained TD architecture
+  - Each module has a single `.td.json` with all definitions (properties, actions, events) and instance parameters
+  - Deleted all 10 per-module `.tm.json` files — no TM files remain
+  - No external TM dependency; upper computer can use TD directly without merge logic
+- **STANDARD.md**: Rewritten for self-contained TD architecture
+- **README.md**: Updated architecture description, directory structure, and development workflow
+- **Templates**: Removed `module.tm.json.template`; updated `module.td.json.template`
+
 ## [v0.1.3] - 2026-03-06
 
 ### Added

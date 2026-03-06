@@ -6,17 +6,30 @@
       "saref": "https://saref.etsi.org/core/"
     }
   ],
+  "@type": [
+    "saref:Actuator",
+    "soha:DualModeServo"
+  ],
   "id": "urn:dev:sn:SOHA-SS-001",
   "title": "Smart Micro Servo",
-  "@type": ["saref:Actuator", "soha:DualModeServo"],
+  "description": "Dual-mode micro servo with angle feedback and unlimited rotation. Servo mode: position control with zero calibration. Wheel mode: continuous rotation with speed control.",
+  "base": "coap://192.168.1.21:5683",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "security": "nosec_sc",
   "soha:moduleType": "actuator",
   "soha:moduleName": "soha_servo_v1",
-  "description": "Dual-mode micro servo with angle feedback and unlimited rotation. Servo mode: position control with zero calibration. Wheel mode: continuous rotation with speed control.",
-
   "soha:physics": {
     "joint": {
       "type": "continuous",
-      "axis": [0, 0, 1],
+      "axis": [
+        0,
+        0,
+        1
+      ],
       "limits": {
         "maxVelocity": 6.28,
         "maxEffort": 0.25
@@ -26,30 +39,49 @@
       "type": "position"
     }
   },
-
-  "base": "coap://192.168.1.21:5683",
-
-  "securityDefinitions": {
-    "nosec_sc": { "scheme": "nosec" }
-  },
-  "security": "nosec_sc",
-
   "properties": {
     "status": {
       "type": "object",
       "readOnly": true,
       "observable": true,
       "properties": {
-        "angle":    { "type": "number",  "unit": "degree",  "description": "Current angle (servo mode) or cumulative rotation (wheel mode)" },
-        "velocity": { "type": "number",  "unit": "deg/s",   "description": "Current angular velocity" },
-        "mode":     { "type": "string",  "enum": ["servo", "wheel"], "description": "Current operating mode" },
-        "error":    { "type": "integer",                     "description": "Error code. 0 = normal" },
-        "ready":    { "type": "boolean",                     "description": "Module initialized and ready for commands" }
+        "angle": {
+          "type": "number",
+          "unit": "degree",
+          "description": "Current angle (servo mode) or cumulative rotation (wheel mode)"
+        },
+        "velocity": {
+          "type": "number",
+          "unit": "deg/s",
+          "description": "Current angular velocity"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "servo",
+            "wheel"
+          ],
+          "description": "Current operating mode"
+        },
+        "error": {
+          "type": "integer",
+          "description": "Error code. 0 = normal"
+        },
+        "ready": {
+          "type": "boolean",
+          "description": "Module initialized and ready"
+        }
       },
-      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+      "forms": [
+        {
+          "href": "/properties/status",
+          "op": [
+            "readproperty"
+          ]
+        }
+      ]
     }
   },
-
   "actions": {
     "setTarget": {
       "title": "Set servo angle",
@@ -59,13 +91,43 @@
       "input": {
         "type": "object",
         "properties": {
-          "angle": { "type": "number", "unit": "degree", "description": "Target angle. 0° is calibrated zero. No limits — supports unlimited rotation." },
-          "speed": { "type": "number", "unit": "percent", "minimum": 0.0, "maximum": 1.0, "default": 0.5, "description": "Fraction of max angular velocity." }
+          "angle": {
+            "type": "number",
+            "unit": "degree",
+            "description": "Target angle. 0° is calibrated zero. No limits — supports unlimited rotation."
+          },
+          "speed": {
+            "type": "number",
+            "unit": "percent",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.5,
+            "description": "Fraction of max angular velocity."
+          }
         },
-        "required": ["angle"]
+        "required": [
+          "angle"
+        ]
       },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/setTarget", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/setTarget",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "setSpeed": {
       "title": "Set wheel rotation speed",
@@ -75,12 +137,37 @@
       "input": {
         "type": "object",
         "properties": {
-          "speed": { "type": "number", "unit": "percent", "minimum": -1.0, "maximum": 1.0, "description": "-1.0=full reverse, 0=active brake, 1.0=full forward" }
+          "speed": {
+            "type": "number",
+            "unit": "percent",
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "description": "-1.0=full reverse, 0=active brake, 1.0=full forward"
+          }
         },
-        "required": ["speed"]
+        "required": [
+          "speed"
+        ]
       },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/setSpeed", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/setSpeed",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "setMode": {
       "title": "Switch operating mode",
@@ -90,31 +177,90 @@
       "input": {
         "type": "object",
         "properties": {
-          "mode": { "type": "string", "enum": ["servo", "wheel"], "description": "Target mode" }
+          "mode": {
+            "type": "string",
+            "enum": [
+              "servo",
+              "wheel"
+            ],
+            "description": "Target mode"
+          }
         },
-        "required": ["mode"]
+        "required": [
+          "mode"
+        ]
       },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/setMode", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/setMode",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "calibrateZero": {
       "title": "Calibrate zero position",
       "description": "Servo mode ONLY. Set current position as 0°. Persists across power cycles.",
       "safe": true,
       "idempotent": true,
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/calibrateZero", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/calibrateZero",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "emergencyStop": {
       "title": "Emergency stop",
       "description": "Immediately stop all movement in any mode.",
       "safe": true,
       "idempotent": true,
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/emergencyStop",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     }
   },
-
   "events": {
     "targetReached": {
       "title": "Target position reached",
@@ -122,11 +268,24 @@
       "data": {
         "type": "object",
         "properties": {
-          "angle":     { "type": "number", "unit": "degree" },
-          "timestamp": { "type": "integer", "unit": "ms" }
+          "angle": {
+            "type": "number",
+            "unit": "degree"
+          },
+          "timestamp": {
+            "type": "integer",
+            "unit": "ms"
+          }
         }
       },
-      "forms": [{ "href": "/events/targetReached", "op": ["subscribeevent"] }]
+      "forms": [
+        {
+          "href": "/events/targetReached",
+          "op": [
+            "subscribeevent"
+          ]
+        }
+      ]
     },
     "stall": {
       "title": "Motor stall detected",
@@ -134,11 +293,24 @@
       "data": {
         "type": "object",
         "properties": {
-          "angle":     { "type": "number", "unit": "degree" },
-          "timestamp": { "type": "integer", "unit": "ms" }
+          "angle": {
+            "type": "number",
+            "unit": "degree"
+          },
+          "timestamp": {
+            "type": "integer",
+            "unit": "ms"
+          }
         }
       },
-      "forms": [{ "href": "/events/stall", "op": ["subscribeevent"] }]
+      "forms": [
+        {
+          "href": "/events/stall",
+          "op": [
+            "subscribeevent"
+          ]
+        }
+      ]
     }
   }
 }

@@ -6,17 +6,30 @@
       "saref": "https://saref.etsi.org/core/"
     }
   ],
+  "@type": [
+    "saref:Actuator",
+    "soha:ContinuousDrive"
+  ],
   "id": "urn:dev:sn:SOHA-HSM-001",
   "title": "High-Speed Drive Module",
-  "@type": ["saref:Actuator", "soha:ContinuousDrive"],
+  "description": "Open-loop high-speed continuous drive motor. Duty-cycle speed control with electronic braking. Speed estimated from back-EMF (no encoder). Suitable for wheeled platforms and mobile chassis.",
+  "base": "coap://192.168.1.31:5683",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "security": "nosec_sc",
   "soha:moduleType": "actuator",
   "soha:moduleName": "soha_drive_v1",
-  "description": "Open-loop high-speed continuous drive motor. Duty-cycle speed control with electronic braking. Speed estimated from back-EMF (no encoder). Suitable for wheeled platforms and mobile chassis.",
-
   "soha:physics": {
     "joint": {
       "type": "continuous",
-      "axis": [0, 0, 1],
+      "axis": [
+        0,
+        0,
+        1
+      ],
       "limits": {
         "maxVelocity": 20.94,
         "maxEffort": 2.0
@@ -26,29 +39,41 @@
       "type": "velocity"
     }
   },
-
-  "base": "coap://192.168.1.31:5683",
-
-  "securityDefinitions": {
-    "nosec_sc": { "scheme": "nosec" }
-  },
-  "security": "nosec_sc",
-
   "properties": {
     "status": {
       "type": "object",
       "readOnly": true,
       "observable": true,
       "properties": {
-        "duty_cycle":  { "type": "number",  "unit": "percent",  "description": "Current duty cycle. 0 = stopped" },
-        "velocity":    { "type": "number",  "unit": "rad/s",    "description": "Estimated speed from back-EMF. Open-loop — actual speed varies with load" },
-        "error":       { "type": "integer",                     "description": "Error code. 0 = normal" },
-        "ready":       { "type": "boolean",                     "description": "Module initialized and ready" }
+        "duty_cycle": {
+          "type": "number",
+          "unit": "percent",
+          "description": "Current duty cycle. 0 = stopped"
+        },
+        "velocity": {
+          "type": "number",
+          "unit": "rad/s",
+          "description": "Estimated speed from back-EMF. Open-loop — actual speed varies with load"
+        },
+        "error": {
+          "type": "integer",
+          "description": "Error code. 0 = normal"
+        },
+        "ready": {
+          "type": "boolean",
+          "description": "Module initialized and ready"
+        }
       },
-      "forms": [{ "href": "/properties/status", "op": ["readproperty"] }]
+      "forms": [
+        {
+          "href": "/properties/status",
+          "op": [
+            "readproperty"
+          ]
+        }
+      ]
     }
   },
-
   "actions": {
     "setSpeed": {
       "title": "Set motor speed",
@@ -58,31 +83,89 @@
       "input": {
         "type": "object",
         "properties": {
-          "speed": { "type": "number", "unit": "percent", "minimum": -1.0, "maximum": 1.0, "description": "Duty cycle. 0=brake." }
+          "speed": {
+            "type": "number",
+            "unit": "percent",
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "description": "Duty cycle. 0=brake."
+          }
         },
-        "required": ["speed"]
+        "required": [
+          "speed"
+        ]
       },
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/setSpeed", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/setSpeed",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "brake": {
       "title": "Active brake",
       "description": "Electronic braking with anti-roll hold. Equivalent to setSpeed(0).",
       "safe": true,
       "idempotent": true,
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/brake", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/brake",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     },
     "emergencyStop": {
       "title": "Emergency stop",
       "description": "Immediate hard stop. No deceleration. Use brake() for controlled stops.",
       "safe": true,
       "idempotent": true,
-      "output": { "type": "object", "properties": { "success": { "type": "boolean" } }, "required": ["success"] },
-      "forms": [{ "href": "/actions/emergencyStop", "op": ["invokeaction"] }]
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "forms": [
+        {
+          "href": "/actions/emergencyStop",
+          "op": [
+            "invokeaction"
+          ]
+        }
+      ]
     }
   },
-
   "events": {
     "stall": {
       "title": "Motor stall detected",
@@ -90,11 +173,24 @@
       "data": {
         "type": "object",
         "properties": {
-          "duty_cycle": { "type": "number", "unit": "percent" },
-          "timestamp":  { "type": "integer", "unit": "ms" }
+          "duty_cycle": {
+            "type": "number",
+            "unit": "percent"
+          },
+          "timestamp": {
+            "type": "integer",
+            "unit": "ms"
+          }
         }
       },
-      "forms": [{ "href": "/events/stall", "op": ["subscribeevent"] }]
+      "forms": [
+        {
+          "href": "/events/stall",
+          "op": [
+            "subscribeevent"
+          ]
+        }
+      ]
     },
     "overcurrent": {
       "title": "Overcurrent warning",
@@ -102,11 +198,24 @@
       "data": {
         "type": "object",
         "properties": {
-          "current":   { "type": "number", "unit": "A" },
-          "timestamp": { "type": "integer", "unit": "ms" }
+          "current": {
+            "type": "number",
+            "unit": "A"
+          },
+          "timestamp": {
+            "type": "integer",
+            "unit": "ms"
+          }
         }
       },
-      "forms": [{ "href": "/events/overcurrent", "op": ["subscribeevent"] }]
+      "forms": [
+        {
+          "href": "/events/overcurrent",
+          "op": [
+            "subscribeevent"
+          ]
+        }
+      ]
     }
   }
 }
